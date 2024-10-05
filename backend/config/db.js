@@ -1,17 +1,18 @@
-const {Client}=require('pg')
+const { Client } = require('pg')
 
-const client=new Client({
-    host:'localhost',
-    port:5432,
-    database:'CharityDB',
-    user:'postgres',
-    password:'admin'
+const dbClient = new Client({
+    host: 'localhost',
+    port: 5432,
+    database: 'charity-db',
+    user: 'postgres',
+    password: '1234'
 })
-client.connect((err)=>{
-    if(err){
-console.log("connection error",err.stack)
-    }else{
+
+dbClient.connect((err) => {
+    if (err) {
+        console.log("connection error", err.stack)
+    } else {
         console.log("Connected")
     }
 })
-module.exports=client;
+module.exports = dbClient;
