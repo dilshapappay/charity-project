@@ -14,12 +14,12 @@ exports.getCamps = async (req, res) => {
     try {
       const result = await dbClient.query(
         `INSERT INTO public."Items"("CampAdminId","Name","Description","LocationAddress")
-      VALUES ($1, $2)`,
-        [CampAdminId,Name,Description,LocationAddress]
+      VALUES ($1, $2,$3,$4)`,
+      [CampAdminId,Name,Description,LocationAddress]
       );
-      res.status(201).json({ message: 'Item inserted successfully', user: result.rows[0] });
+      res.status(201).json({ message: 'Camp inserted successfully', user: result.rows[0] });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Failed to insert item' });
+      res.status(500).json({ error: 'Failed to insert camp' });
     }
   };
