@@ -1,0 +1,7 @@
+const express = require('express');
+const campController = require('../controllers/campController');
+const router = express.Router();
+
+router.get('/', campController.getCamps);
+router.post('/',campController.createCamps);
+module.exports = router;

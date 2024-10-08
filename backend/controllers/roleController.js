@@ -9,7 +9,7 @@ exports.getRoles = async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve role' });
   }
 };
-exports.createUser = async (req, res) => {
+exports.createRoles = async (req, res) => {
   const {RoleName } = req.body;
 
   try {
