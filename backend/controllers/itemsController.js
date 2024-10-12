@@ -9,6 +9,25 @@ exports.getItems = async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve Items' });
   }
 };
+
+
+exports.getItemById = async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    const result = await dbClient.query('SELECT * FROM "Items" WHERE "Id" = $1', [id]);
+
+    if (result.rows.length > 0) {
+      res.status(200).json(result.rows[0]);
+    } else {
+      res.status(404).json({ message: 'Item not found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving item by ID:', error);
+    res.status(500).json({ error: 'Failed to retrieve item' });
+  }
+};
+
 exports.createItems = async (req, res) => {
     const { Name,Description } = req.body;
   

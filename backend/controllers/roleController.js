@@ -9,6 +9,24 @@ exports.getRoles = async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve role' });
   }
 };
+
+exports.getRoleById=async(req,res)=>{
+  const { id } = req.params;
+  try{
+      const result=await dbClient.query('SELECT * FROM "Role" WHERE Id=$1',
+          [id]
+      );
+      if (result.rows.length > 0) {
+          res.json(result.rows[0]); 
+      } else {
+          res.status(404).json({ message: 'Role not found' });
+      }
+  } catch (error) {
+      
+      console.error('Error retrieving role by ID:', error);
+      res.status(500).json({ error: 'Failed to retrieve role' });
+  }
+}
 exports.createRoles = async (req, res) => {
   const {RoleName } = req.body;
 

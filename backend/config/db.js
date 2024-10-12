@@ -8,7 +8,7 @@ const dbClient = new Client({
     password: '1234'
 })
 
-dbClient.connect((err) => {
+dbClient.connect((err, client) => {
     if (err) {
         console.log("connection error", err.stack)
     } else {

@@ -9,6 +9,25 @@ exports.getRequirements = async (req, res) => {
     }
   };
 
+ 
+
+exports.getRequirementById = async (req, res) => {
+    const { id } = req.params;
+    
+    try {
+      const result = await dbClient.query('SELECT * FROM "Requirement" WHERE "Id" = $1', [id]);
+  
+      if (result.rows.length > 0) {
+        res.status(200).json(result.rows[0]);
+      } else {
+        res.status(404).json({ message: 'Requirement not found' });
+      }
+    } catch (error) {
+      console.error('Error retrieving Requirement by ID:', error);
+      res.status(500).json({ error: 'Failed to retrieve Requirement' });
+    }
+  };
+  
   exports.createRequirements = async (req, res) => {
     const { ItemId, CampId, StatusId, RequiredQuantity, AchievedQuantity } = req.body;
   

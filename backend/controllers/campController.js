@@ -9,9 +9,9 @@ exports.getCamps = async (req, res) => {
     }
   };
   exports.getCampById=async(req,res)=>{
-    const { id } = req.body;
+    const { id } = req.params;
     try{
-        const result=await dbClient.query('SELECT * FROM public."Camp_Data" WHERE id=$1',
+        const result=await dbClient.query('SELECT * FROM "Camp_Data" WHERE Id=$1',
             [id]
         );
         if (result.rows.length > 0) {
