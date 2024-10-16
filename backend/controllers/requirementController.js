@@ -9,8 +9,6 @@ exports.getRequirements = async (req, res) => {
     }
   };
 
- 
-
 exports.getRequirementById = async (req, res) => {
     const { id } = req.params;
     
@@ -19,7 +17,7 @@ exports.getRequirementById = async (req, res) => {
   
       if (result.rows.length > 0) {
         res.status(200).json(result.rows[0]);
-      } else {
+      } else { 
         res.status(404).json({ message: 'Requirement not found' });
       }
     } catch (error) {
