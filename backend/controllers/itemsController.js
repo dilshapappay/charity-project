@@ -44,6 +44,22 @@ exports.createItems = async (req, res) => {
     }
   };
 
+  exports.updateItem=async(req,res)=>{
+    const { id,Name,Description } = req.body; 
+    try{
+        const result=await dbClient.query('UPDATE "Items" SET "Name" = $2, "Description" = $3 WHERE "Id" = $1',
+            [ id,Name,Description]
+        );
+        if (result.rows.length > 0) {
+            res.json(result.rows[0]); 
+        } else {
+            res.status(404).json({ message: 'Item updated successfully' });
+        }
+    } catch (error) {
+      console.error( error);
+      res.status(500).json({ error: 'Failed to update item' });
+    }
+  }
   exports.deleteItem = async (req, res) => {
     const { id } = req.body;
     try {

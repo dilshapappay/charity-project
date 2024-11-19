@@ -43,6 +43,25 @@ exports.createUser = async (req, res) => {
     res.status(500).json({ error: 'Failed to add user' });
   }
 };
+
+exports.updateUser=async(req,res)=>{
+  const { id,firstName, lastName, roleId, password, email, address, mobile } = req.body; 
+  try{
+      const result=await dbClient.query('UPDATE "User"SET "FirstName" = $2, "LastName" = $3, "RoleId" = $4, "Password" = $5,  "Email" = $6, "Address" = $7, "Mobile" = $8 WHERE "Id" = $1',
+          [id,firstName, lastName, roleId, password, email, address, mobile]
+      );
+      if (result.rows.length > 0) {
+          res.json(result.rows[0]); 
+      } else {
+          res.status(404).json({ message: 'User updated successfully' });
+      }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update user' });
+  }
+}
+
+
 exports.deleteUser = async (req, res) => {
   const { id } = req.body;
   try {

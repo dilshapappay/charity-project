@@ -41,6 +41,23 @@ exports.getRequirementById = async (req, res) => {
       res.status(500).json({ error: 'Failed to insert Requirement' });
     }
   };
+  exports.updateRequirement=async(req,res)=>{
+    const { Id,ItemId, CampId, StatusId, RequiredQuantity, AchievedQuantity} = req.body; 
+    try{
+        const result=await dbClient.query('UPDATE "Requirement" SET "ItemId" = $2, "CampId" = $3, "StatusId" = $4, "RequiredQuantity" = $5,  "AchievedQuantity" = $6  WHERE "Id" = $1',
+            [Id,ItemId, CampId, StatusId, RequiredQuantity, AchievedQuantity]
+        );
+        if (result.rows.length > 0) {
+            res.json(result.rows[0]); 
+        } else {
+            res.status(404).json({ message: 'Requirement updated successfully' });
+        }
+    } catch (error) {
+      console.error( error);
+      res.status(500).json({ error: 'Failed to requirement user' });
+    }
+  }
+  
   exports.deleteRequirement = async (req, res) => {
     const { id } = req.body;
     try {
