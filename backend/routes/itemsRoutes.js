@@ -5,5 +5,7 @@ const router = express.Router();
 router.get('/', itemsController.getItems);
 router.get('/:id', itemsController.getItemById);
 router.post('/', itemsController.createItems);
+router.put('/',itemsController.updateItem);
+
 router.delete('/',itemsController.deleteItem)
 module.exports = router;

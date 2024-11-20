@@ -42,6 +42,23 @@ exports.getCamps = async (req, res) => {
     }
   };
 
+  exports.updateCamp=async(req,res)=>{
+    const { id,CampAdminId,Name,Description,LocationAddress} = req.body; 
+    try{
+        const result=await dbClient.query('UPDATE "Camp_Data" SET "CampAdminId" = $2, "Name" = $3, "Description" = $4, "LocationAddress" = $5 WHERE "Id" = $1',
+            [id ,CampAdminId,Name,Description,LocationAddress]
+        );
+        if (result.rows.length > 0) {
+            res.json(result.rows[0]); 
+        } else {
+            res.status(404).json({ message: 'Camp updated successfully' });
+        }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to update camp' });
+    }
+  }
+  
   exports.deleteCamp = async (req, res) => {
     const { id } = req.body;
     try {
