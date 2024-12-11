@@ -11,10 +11,10 @@ exports.getOrders = async (req, res) => {
 };
 
 exports.getOrderById=async(req,res)=>{
-  const {Id } = req.params;
+  const {id} = req.params;
   try{
-      const result=await dbClient.query('SELECT * FROM  public."Orders" WHERE Id=$1',
-          [Id]
+      const result=await dbClient.query('SELECT * FROM  "Orders" WHERE "Id"=$1',
+          [id]
       );
       if (result.rows.length > 0) {
           res.json(result.rows[0]); 
@@ -29,13 +29,13 @@ exports.getOrderById=async(req,res)=>{
 }
 
 exports.createOrder = async (req, res) => {
-  const { RequirementId, StatusId, UserId } = req.body;
+  const { RequirementId, StatusId, UserId,Quantity } = req.body;
 
   try {
     const result = await dbClient.query(
-      `INSERT INTO public."Orders"("RequirementId", "StatusId", "UserId")
-    VALUES ($1, $2, $3)`,
-      [RequirementId, StatusId, UserId]
+      `INSERT INTO public."Orders"("RequirementId", "StatusId", "UserId","Quantity")
+    VALUES ($1, $2, $3, $4)`,
+      [RequirementId, StatusId, UserId,Quantity]
     );
     res.status(201).json({ message: 'Order inserted successfully', user: result.rows[0] });
   } catch (error) {
@@ -45,10 +45,10 @@ exports.createOrder = async (req, res) => {
 };
 
 exports.updateOrder=async(req,res)=>{
-  const { id,RequirementId, StatusId, UserId} = req.body; 
+  const { id,RequirementId, StatusId, UserId,Quantity} = req.body; 
   try{
-      const result=await dbClient.query('UPDATE "Orders" SET "RequirementId" = $2, "StatusId" = $3, "UserId" = $4  WHERE "Id" = $1',
-          [id ,RequirementId, StatusId, UserId]
+      const result=await dbClient.query('UPDATE "Orders" SET "RequirementId" = $2, "StatusId" = $3, "UserId" = $4,"Quantity" = $5  WHERE "Id" = $1',
+          [id ,RequirementId, StatusId, UserId, Quantity]
       );
       if (result.rows.length > 0) {
           res.json(result.rows[0]); 

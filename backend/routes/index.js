@@ -7,6 +7,9 @@ const roleRoutes = require('./roleRoutes');
 const campRoutes = require('./campRoutes');
 const requirementRoutes = require('./requirementRoutes');
 const orderRoutes=require('./orderRoutes');
+const volunteerRoutes=require('./volunteerRoutes.js');
+
+ 
 
 
 router.use('/users', userRoutes);
@@ -15,5 +18,6 @@ router.use('/roles', roleRoutes);
 router.use('/camps', campRoutes);
 router.use('/requirements',requirementRoutes);
 router.use('/orders', orderRoutes);
+router.use('/volunteers',volunteerRoutes);
 
 module.exports = router;
