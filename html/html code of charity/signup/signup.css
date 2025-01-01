@@ -1,7 +1,7 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: url('/photos/children.png') no-repeat  fixed;
+    background: url('../photos/children.png') no-repeat  fixed;
     background-size: cover;
     display: flex;
     align-items: center;
