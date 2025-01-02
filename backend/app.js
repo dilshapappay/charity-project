@@ -1,5 +1,12 @@
 const express = require('express');
+const cors = require('cors');
+
+
 const app = express();
+
+// Enable CORS for all domains
+app.use(cors());
+
 const routes = require('./routes');
 
 const { swaggerUi, swaggerSpec } = require('./config/swagger');

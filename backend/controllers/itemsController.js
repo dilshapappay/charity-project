@@ -61,11 +61,11 @@ exports.createItems = async (req, res) => {
     }
   }
   exports.deleteItem = async (req, res) => {
-    const { id } = req.body;
+    const { Id } = req.body;
     try {
       const result = await dbClient.query(
         `DELETE FROM public."Items" WHERE "Id" = $1`,
-        [id]
+        [Id]
       );
       res.status(201).json({ message: 'Item deleted successfully', user: result.rows[0] });
     } catch (error) {

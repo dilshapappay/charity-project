@@ -1,6 +1,19 @@
+import { useEffect, useState } from 'react';
 import styles from './OurNeeds.module.css';
+import { getItems } from '../services/itemServices';
 
 export default function OurNeeds() {
+    const [categories,setCategories] = useState([]);
+
+    const setItems = async function(){
+        const items = await getItems();
+        setCategories(items)
+    }
+
+    useEffect(()=>{
+        setItems();
+    },[]);
+
     return (
         <div>
             <div className={styles.header}>
@@ -30,9 +43,9 @@ export default function OurNeeds() {
                     <option>kasarcode</option>
                 </select>
                 <select>
-                    <option>Categories</option>
-                    <option>Clothing</option>
-                    <option>Educational Supplies</option>
+                    {categories.map(item=>{
+                        return (<option>{item.Name}</option>)
+                    })}
                 </select>
             </div>
             <div>
