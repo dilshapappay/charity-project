@@ -1,6 +1,26 @@
 const dbClient = require('../config/db');
+
 exports.getRequirements = async (req, res) => {
     try {
+
+      const sql = `SELECT TOP 100 * FROM public."Requirement"`;
+
+
+      if(req.query.distr || categ){
+        sql += ' WHERE ';
+
+        if(req.query.distr){
+          sql += `"District" = '${req.query.distr}'`;
+        }
+        
+        if(req.query.categ){
+          if(req.query.distr){
+            sql += ' AND ';
+          sql += `"Category" = '${req.query.categ}'`;
+        }
+        
+      }
+
       const result = await dbClient.query('SELECT * FROM public."Requirement"');
       res.json(result.rows);
     } catch (error) {
