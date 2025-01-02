@@ -27,13 +27,13 @@ exports.getCamps = async (req, res) => {
 }
   
   exports.createCamps = async (req, res) => {
-    const { CampAdminId,Name,Description,LocationAddress } = req.body;
+    const { CampAdminId,Name,Description,LocationAddress,District } = req.body;
   
     try {
       const result = await dbClient.query(
-        `INSERT INTO public."Camp_Data"("CampAdminId","Name","Description","LocationAddress")
-      VALUES ($1, $2,$3,$4)`,
-      [CampAdminId,Name,Description,LocationAddress]
+        `INSERT INTO public."Camp_Data"("CampAdminId","Name","Description","LocationAddress","District")
+      VALUES ($1, $2,$3,$4,$5)`,
+      [CampAdminId,Name,Description,LocationAddress,District]
       );
       res.status(201).json({ message: 'Camp inserted successfully', user: result.rows[0] });
     } catch (error) {

@@ -5,6 +5,7 @@ const campSchema = Joi.object({
     Name: Joi.string().required(),
     Description: Joi.string().required(),
     LocationAddress: Joi.string().required(),
+    District: Joi.string().required(),
 
 });
 

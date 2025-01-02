@@ -1,17 +1,24 @@
 import { useEffect, useState } from 'react';
 import styles from './OurNeeds.module.css';
-import { getItems } from '../services/itemServices';
+import { getItems } from '../services/itemService';
+import { getRequirements } from '../services/requirementService';
 
 export default function OurNeeds() {
     const [categories,setCategories] = useState([]);
-
+    const [requirements,setRequirements] = useState([]);
     const setItems = async function(){
         const items = await getItems();
         setCategories(items)
     }
 
+    const getRequirementsFromApi = async function(){
+        const requirements = await getRequirements();
+        setRequirements(requirements)
+    }
+
     useEffect(()=>{
         setItems();
+        getRequirementsFromApi();
     },[]);
 
     return (
@@ -26,7 +33,7 @@ export default function OurNeeds() {
             </div>
             <div className={styles.filters}>
                 <select>
-                    <option>District</option>
+                    <option> select District</option>
                     <option>thiruvananthapuram</option>
                     <option>kollam</option>
                     <option>pathanamthitta</option>
@@ -43,10 +50,12 @@ export default function OurNeeds() {
                     <option>kasarcode</option>
                 </select>
                 <select>
+                    <option> select Category</option>
                     {categories.map(item=>{
                         return (<option>{item.Name}</option>)
                     })}
                 </select>
+                <button>Search</button>
             </div>
             <div>
                 <div className={styles.sectionTitle}>Clothing & Accessories</div>
@@ -69,6 +78,7 @@ export default function OurNeeds() {
                             <img src="https://via.placeholder.com/200" alt="Book" />
                             <h3>Books</h3>
                             <p>Needed: 5</p>
+                            <p>Camp: malappuram</p>
                             <button>Donate</button>
                         </div>
                         <div className={styles.card}></div>
