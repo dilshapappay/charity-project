@@ -1,10 +1,12 @@
 const express = require('express');
 const userController = require('../controllers/userController');
+const { validate } = require('../middlewares/validator');
+const { userSchema } = require('../api-data-schema/addUserSchema');
 const router = express.Router();
 
 router.get('/', userController.getUsers);
 router.get('/:id', userController.getUserById);
-router.post('/', userController.createUser);
+router.post('/',validate(userSchema), userController.createUser);
 router.put('/',userController.updateUser);
 router.delete('/',userController.deleteUser);
 module.exports = router;

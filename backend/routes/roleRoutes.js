@@ -1,9 +1,11 @@
 const express = require('express');
 const roleController = require('../controllers/roleController');
+const { validate } = require('../middlewares/validator');
+const { roleSchema } = require('../api-data-schema/addRoleSchema');
 const router = express.Router();
 
 router.get('/', roleController.getRoles);
 router.get('/:id', roleController.getRoleById);
 
-router.post('/',roleController.createRoles);
+router.post('/', validate(roleSchema),roleController.createRoles);
 module.exports = router;
