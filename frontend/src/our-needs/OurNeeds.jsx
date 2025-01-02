@@ -2,24 +2,53 @@ import { useEffect, useState } from 'react';
 import styles from './OurNeeds.module.css';
 import { getItems } from '../services/itemService';
 import { getRequirements } from '../services/requirementService';
+import districts from '../utils/districts';
+import { capitalizeFirstLetter } from '../utils/util';
 
 export default function OurNeeds() {
-    const [categories,setCategories] = useState([]);
-    const [requirements,setRequirements] = useState([]);
-    const setItems = async function(){
+    const [categories, setCategories] = useState([]);
+    const [requirements, setRequirements] = useState([]);
+    const [selectedDistrict, setSelectedDistrict] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
+
+    const setItems = async function () {
         const items = await getItems();
         setCategories(items)
     }
 
-    const getRequirementsFromApi = async function(){
-        const requirements = await getRequirements();
-        setRequirements(requirements)
-    }
+    const handleSearch = async function () {
+        const requirements = await getRequirements({ district: selectedDistrict, categories: selectedCategory });
+        debugger
+        if(requirements.length === 0)
+        {
+            setRequirements([])
+            return;
+        }    
 
-    useEffect(()=>{
+        // Group the requirements by Name
+        const groupedRequirements = requirements.reduce((acc, requirement) => {
+            const { District } = requirement;
+            if (!acc[District]) {
+                acc[District] = [];
+            }
+            acc[District].push(requirement);
+            return acc;
+        }, {});
+        setRequirements(groupedRequirements);
+    };
+
+    useEffect(() => {
         setItems();
-        getRequirementsFromApi();
-    },[]);
+        handleSearch();
+    }, []);
+
+    const handleDistrictChange = (event) => {
+        setSelectedDistrict(event.target.value);
+    };
+
+    const handleCategoryChange = (event) => {
+        setSelectedCategory(event.target.value);
+    };
 
     return (
         <div>
@@ -32,60 +61,40 @@ export default function OurNeeds() {
                 <button>Login</button>
             </div>
             <div className={styles.filters}>
-                <select>
-                    <option> select District</option>
-                    <option>thiruvananthapuram</option>
-                    <option>kollam</option>
-                    <option>pathanamthitta</option>
-                    <option>aalapuzha</option>
-                    <option>kottayam</option>
-                    <option>edukki</option>
-                    <option>eranamkulam</option>
-                    <option>thrissur</option>
-                    <option>palakkad</option>
-                    <option>malappuram</option>
-                    <option>kozhicode</option>
-                    <option>wayanad</option>
-                    <option>kannur</option>
-                    <option>kasarcode</option>
+                <select value={selectedDistrict} onChange={handleDistrictChange}>
+                    <option value="">Select District</option>
+                    {Object.values(districts).map((district) => (
+                        <option key={district} value={district}>
+                            {district}
+                        </option>
+                    ))}
                 </select>
-                <select>
-                    <option> select Category</option>
-                    {categories.map(item=>{
-                        return (<option>{item.Name}</option>)
+
+                <select value={selectedCategory} onChange={handleCategoryChange}>
+                    <option>Select Category</option>
+                    {categories.map(item => {
+                        return (<option key={item.Id} value={item.Id}>{item.Name}</option>)
                     })}
                 </select>
-                <button>Search</button>
+                <button className={styles.button} onClick={handleSearch}>Search</button>
             </div>
             <div>
-                <div className={styles.sectionTitle}>Clothing & Accessories</div>
-                <div className={styles.cardContainer}>
-                    <div className={styles.card}>
-                        <img src="photos/tshirt.png" alt="T-shirt" />
-                        <h3>T-shirt</h3>
-                        <p>Needed: 2</p>
-                        <p>Camp: palakkad</p>
-                        <button>Donate</button>
-                    </div>
-                    <div className={styles.card}></div>
-                    <div className={styles.card}></div>
-                    <div className={styles.card}></div>
-                </div>
-                <div>
-                    <div className={styles.sectionTitle}>Educational Supplies</div>
-                    <div className={styles.cardContainer}>
-                        <div className={styles.card}>
-                            <img src="https://via.placeholder.com/200" alt="Book" />
-                            <h3>Books</h3>
-                            <p>Needed: 5</p>
-                            <p>Camp: malappuram</p>
-                            <button>Donate</button>
+                {Object.keys(requirements).map((district) => (
+                    <div key={district}>
+                        <div className={styles.sectionTitle}><h3>{capitalizeFirstLetter(district)}</h3></div>
+                        <div className={styles.cardContainer}>
+                            {requirements[district].map((requirement, index) => (
+                                <div key={index} className={styles.card}>
+                                    <h3>{requirement.Name}</h3>
+                                    <p>{requirement.Description}</p>
+                                    <p>Needed: {requirement.RequiredQuantity}</p>
+                                    <p>District: {requirement.District}</p>
+                                    <button className="btn btn-success">Donate</button>
+                                </div>
+                            ))}
                         </div>
-                        <div className={styles.card}></div>
-                        <div className={styles.card}></div>
-                        <div className={styles.card}></div>
                     </div>
-                </div>
+                ))}
             </div>
         </div>
     )

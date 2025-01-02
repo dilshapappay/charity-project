@@ -2,34 +2,31 @@ const dbClient = require("../config/db");
 
 exports.getRequirements = async (req, res) => {
   try {
-    let sql = `SELECT * FROM public."Requirement" `;
-
-
-    if(req.query.district){
-      sql += ' JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id"';
-    }
-
-    if(req.query.categories){
-      sql += ' JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"';
-    }
+    let sql = `SELECT public."Items"."Name", public."Items"."Description", public."Requirement"."RequiredQuantity", public."Camp_Data"."District" 
+               FROM public."Requirement" 
+               JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id" 
+               JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"`;
+    const params = [];
 
     if (req.query.district || req.query.categories) {
       sql += " WHERE ";
 
       if (req.query.district) {
-        sql += `public."Camp_Data"."District" = '${req.query.district}'`;
+        params.push(req.query.district.toLowerCase());
+        sql += `LOWER(public."Camp_Data"."District") = $${params.length}`;
       }
 
       if (req.query.categories) {
         if (req.query.district) {
           sql += " AND ";
-          sql += `public."Requirement"."ItemId" = '${req.query.categories}'`;
         }
+        params.push(req.query.categories);
+        sql += `public."Requirement"."ItemId" = $${params.length}`;
       }
     }
     sql += ` ORDER BY public."Requirement"."CreatedOn" DESC LIMIT 100`;
 
-    const result = await dbClient.query(sql);
+    const result = await dbClient.query(sql, params);
     res.json(result.rows);
   } catch (error) {
     console.error(error);
