@@ -71,7 +71,7 @@ export default function OurNeeds() {
                 </select>
 
                 <select value={selectedCategory} onChange={handleCategoryChange}>
-                    <option>Select Category</option>
+                    <option value="">Select Category</option>
                     {categories.map(item => {
                         return (<option key={item.Id} value={item.Id}>{item.Name}</option>)
                     })}
