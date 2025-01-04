@@ -18,7 +18,7 @@ export default function OurNeeds() {
 
     const handleSearch = async function () {
         const requirements = await getRequirements({ district: selectedDistrict, categories: selectedCategory });
-        debugger
+        
         if(requirements.length === 0)
         {
             setRequirements([])
@@ -71,7 +71,7 @@ export default function OurNeeds() {
                 </select>
 
                 <select value={selectedCategory} onChange={handleCategoryChange}>
-                    <option>Select Category</option>
+                    <option value="">Select Category</option>
                     {categories.map(item => {
                         return (<option key={item.Id} value={item.Id}>{item.Name}</option>)
                     })}
