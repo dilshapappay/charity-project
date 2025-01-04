@@ -15,7 +15,9 @@ export default function Welcome() {
                     <p class="author">— Mahatma Gandhi</p>
                 </div>
                 <div class="buttons">
-                    <button class="donate-btn">Donate</button>
+                <Link to="/main">
+                <button class="donate-btn">Donate</button>
+                </Link> 
                     <Link to="/our-needs">
                         <button className="needs-btn">OurNeeds</button>
                     </Link> 
