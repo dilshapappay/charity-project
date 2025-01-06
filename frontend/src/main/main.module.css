@@ -5,11 +5,49 @@
 }
 
 header {
-  background-color: #f8f9fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
   padding: 10px;
   width: 100%;
   text-align: center;
+  border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header .logo {
+  font-size: 24px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #1f502d, #2d8144, #ff7e5f, #feb47b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.header .searchBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header .searchBar input[type="text"] {
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 200px;
+  outline: none;
+}
+.searchBar i {
+  color: #777;
+}
+.profile{ display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.profile img{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #2d8144;
 }
 
 .content {
