@@ -1,18 +1,24 @@
+
 .Main {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  height: 100vh;
+  overflow: hidden; 
 }
 
-header {
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #ffffff;
-  padding: 10px;
-  width: 100%;
-  text-align: center;
-  border-radius: 8px;
+  padding: 10px 20px;
+  z-index: 1000; /* Ensures the header stays above all other elements */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -23,6 +29,7 @@ header {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
 .header .searchBar {
   display: flex;
   align-items: center;
@@ -36,57 +43,70 @@ header {
   width: 200px;
   outline: none;
 }
-.searchBar i {
-  color: #777;
-}
-.profile{ display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.profile img{
+
+.header .profile img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   border: 2px solid #2d8144;
 }
 
+/* Content wrapper */
 .content {
   display: flex;
-  width: 100%;
-  max-width: 1200px;
-  margin-top: 20px;
+  margin-top: 60px; 
+  height: calc(100vh - 60px); 
+  overflow: hidden; /* Prevents the sidebar from scrolling */
 }
+
 
 .sidebar {
   width: 200px;
-  background-color: #f0f0f0;
+  background-color: #ffffff;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 80px;
+   left:0;
+  bottom: 0;
+  overflow-y: auto; /* Enables sidebar scrolling */
+  border-radius: 8px;
+  z-index: 999;
 }
 
-.sidebar nav ul {
-  list-style-type: none;
+.sidebar ul {
+  list-style: none;
   padding: 0;
 }
 
-.sidebar nav ul li {
-  margin-bottom: 10px;
+.sidebar ul li {
+  margin-bottom: 15px;
 }
 
-.sidebar nav ul li a {
+.sidebar ul li a {
   text-decoration: none;
-  color: #007bff;
+  color: #333;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 10px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.sidebar nav ul li a:hover {
-  text-decoration: underline;
+.sidebar ul li a:hover {
+  color: #fff;
+  background-color: #2d8144;
 }
 
-.main-content {
+.mainContent {
+  margin-left: 200px; 
   flex-grow: 1;
   padding: 20px;
+  height: calc(100vh - 60px); 
+  overflow-y: auto;
   background-color: #ffffff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  margin-left: 20px;
 }

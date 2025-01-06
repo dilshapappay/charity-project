@@ -2,7 +2,22 @@ const dbClient = require('../config/db');
 
 exports.getUsers = async (req, res) => {
   try {
-    const result = await dbClient.query('SELECT * FROM "User"');
+let sql=`SELECT 
+ public."Role"."RoleName",
+  public."User"."FirstName",
+   public."User"."LastName",
+   public."User"."Email",
+   public."User"."Address",
+   public."User"."Mobile"
+FROM 
+  public."User" 
+JOIN 
+  public."Role" 
+ON 
+  public."User"."RoleId" = public."Role"."id";`
+
+
+    const result = await dbClient.query(sql);
     res.json(result.rows);
   } catch (error) {
     console.error(error);
@@ -29,13 +44,13 @@ exports.getUserById=async(req,res)=>{
 }
 
 exports.createUser = async (req, res) => {
-  const { firstName, lastName, roleId, password, email, address, mobile } = req.body;
+  const { FirstName, LastName, RoleId, Password, Email, Address, Mobile } = req.body;
 
   try {
     const result = await dbClient.query(
       `INSERT INTO "User"("FirstName", "LastName", "RoleId", "Password", "Email", "Address", "Mobile")
 	VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [firstName, lastName, roleId, password, email, address, mobile]
+      [FirstName, LastName, RoleId, Password, Email, Address, Mobile]
     );
     res.status(201).json({ message: 'User added successfully', user: result.rows[0] });
   } catch (error) {

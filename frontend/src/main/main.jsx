@@ -5,7 +5,14 @@ function Main() {
   return (
     <div className={styles.Main}>
       <header className={styles.header}>
-        <h1>My Application</h1>
+        <div className={styles.logo}>DONATENOW</div>
+                        <div className={styles.searchBar}>
+                            <i className="fas fa-search"></i>
+                            <input type="text" placeholder="Search" />
+                        </div>
+                        <div className={styles.profile}>
+                    <img src="../photos/dave.jpg" alt="Profile Picture"/>
+                </div>
       </header>
       <div className={styles.content}>
         <aside className={styles.sidebar}>
@@ -13,6 +20,8 @@ function Main() {
             <ul>
               <li><Link to="/main/users">Users</Link></li>
               <li><Link to="/main/requirements">Requirements</Link></li>
+              <li><Link to="/main/camps">Camps</Link></li>
+
             </ul>
           </nav>
         </aside>

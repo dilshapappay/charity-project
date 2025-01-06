@@ -5,7 +5,7 @@ import OurNeeds from './our-needs/OurNeeds';
 import Main from './main/main';
 import Requirements from './requirements/Requirements';
 import Users from './users/Users';
-
+import Camps from './camps/Camp';
 function App() {
   return (
     <div className="App">
@@ -16,6 +16,7 @@ function App() {
           <Route path="/main" element={<Main />} >
             <Route path="users" element={<Users/>} />
             <Route path="requirements" element={<Requirements />} />
+            <Route path="camps" element={<Camps />} />
           </Route>
         </Routes>
       </BrowserRouter>

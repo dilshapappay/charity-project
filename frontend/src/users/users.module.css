@@ -1,0 +1,60 @@
+.tableContainer {
+  
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.tableContainer h2 {
+    margin-bottom: 20px;
+    color: #2d8144;
+}
+
+table {
+    width:100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 16px;
+    table-layout: auto;
+}
+
+table th, table td {
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+table td{
+    white-space: nowrap;
+}
+
+table th {
+    background-color: #fdd9b2;
+    color: #333;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+
+.actionIcons i:hover{
+    color:#2d8144;
+    cursor: pointer;
+}
+
+.addButton {
+    background-color: #2d8144;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;
+    margin-bottom: 15px;
+    
+}
+
+.addButton:hover {
+    background-color: #236832;
+}
