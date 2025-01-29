@@ -2,6 +2,7 @@ const express = require('express');
 const userController = require('../controllers/userController');
 const { validate } = require('../middlewares/validator');
 const { userSchema } = require('../api-data-schema/addUserSchema');
+const authMiddlware = require('../middlewares/authMiddlware');
 const router = express.Router();
 
 router.get('/', userController.getUsers);

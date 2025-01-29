@@ -1,25 +1,19 @@
 const API_URL = process.env.REACT_APP_API_URL;
 
-export function getRequirements(data){
-    const url = new URL(`${API_URL}/requirements`);
-
-    if(data){
-        Object.keys(data).forEach(key => url.searchParams.append(key, data[key]));
-    }
-
-    return fetch(url.toString())
+export function getCamps(){
+    return fetch(`${API_URL}/camps`)
     .then(response => response.json())
     .then(data => data);
 }
 
 
-export function createRequirement(requirement){
-    return fetch(`${API_URL}/requirements`, {
+export function createCamp(camp){
+    return fetch(`${API_URL}/camps`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(requirement),
+        body: JSON.stringify(camp),
 })
 
 
@@ -27,8 +21,9 @@ export function createRequirement(requirement){
     .then(data => data);
 }
 
-export function deleteRequirement(id) {
-    return fetch(`${API_URL}/requirements`, {
+
+export function deleteCamp(id) {
+    return fetch(`${API_URL}/camps`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

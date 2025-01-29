@@ -6,10 +6,31 @@ export function getItems(){
     .then(data => data);
 }
 
-export function updateItems(){
-    
+export function createItems(item){
+    return fetch(`${API_URL}/items`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(item),
+    })
+    .then(response => response.json())
+    .then(data => data);
 }
 
-export function deleteItems(){
-    
-}
+export function deleteItem(Id) {
+    return fetch(`${API_URL}/items`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ Id }),
+    })
+      .then(async (response) => {
+        var result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.message);
+        }
+        return result;
+      });
+  }

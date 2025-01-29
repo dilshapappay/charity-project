@@ -5,7 +5,7 @@ const { itemSchema } = require('../api-data-schema/addItemSchema');
 const router = express.Router();
 
 router.get('/',itemsController.getItems);
-router.get('/:id', itemsController.getItemById);
+router.get('/:id',itemsController.getItemById);
 router.post('/',validate(itemSchema), itemsController.createItems);
 router.put('/',itemsController.updateItem);
 

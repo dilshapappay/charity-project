@@ -1,13 +1,32 @@
 const dbClient = require('../config/db');
+
 exports.getCamps = async (req, res) => {
     try {
-      const result = await dbClient.query('SELECT * FROM public."Camp_Data"');
-      res.json(result.rows);
+        const result = await dbClient.query(`
+            SELECT 
+            
+                public."Camp_Data"."Id",
+                public."User"."FirstName",
+                public."User"."LastName",
+                public."Camp_Data"."Name",
+                public."Camp_Data"."Description",
+                public."Camp_Data"."LocationAddress",
+                public."Camp_Data"."District"
+
+            FROM 
+                public."Camp_Data"
+            JOIN 
+                public."User" 
+            ON 
+                public."Camp_Data"."CampAdminId" = public."User"."Id";
+        `); 
+        res.json(result.rows);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to retrieve camp' });
+        console.error(error);
+        res.status(500).json({ error: 'Failed to retrieve camp' });
     }
-  };
+};
+
   exports.getCampById=async(req,res)=>{
     const { id } = req.params;
     try{

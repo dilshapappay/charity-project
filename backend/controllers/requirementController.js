@@ -2,7 +2,9 @@ const dbClient = require("../config/db");
 
 exports.getRequirements = async (req, res) => {
   try {
-    let sql = `SELECT public."Items"."Name", public."Items"."Description", public."Requirement"."RequiredQuantity", public."Camp_Data"."District" 
+    let sql = `SELECT 
+                public."Requirement"."Id",
+    public."Items"."Name", public."Items"."Description", public."Requirement"."RequiredQuantity",public."Requirement"."AchievedQuantity", public."Camp_Data"."District" 
                FROM public."Requirement" 
                JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id" 
                JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"`;

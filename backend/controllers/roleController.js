@@ -42,3 +42,24 @@ exports.createRoles = async (req, res) => {
     res.status(500).json({ error: 'Failed to add role' });
   }
 };
+
+
+
+exports.deleteRoles = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await dbClient.query(
+      `DELETE FROM public."Role"
+      WHERE "id" = $1`,
+      [id]
+    );
+    if (result.rowCount > 0) {
+      res.json({ message: 'Role deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'Role not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to delete role' });
+  }
+};

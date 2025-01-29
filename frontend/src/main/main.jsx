@@ -21,6 +21,10 @@ function Main() {
               <li><Link to="/main/users">Users</Link></li>
               <li><Link to="/main/requirements">Requirements</Link></li>
               <li><Link to="/main/camps">Camps</Link></li>
+              <li><Link to="/main/items">Items</Link></li>
+              <li><Link to="/main/volunteers">Volunteers</Link></li>
+              <li><Link to="/main/orders">Orders</Link></li>
+
 
             </ul>
           </nav>

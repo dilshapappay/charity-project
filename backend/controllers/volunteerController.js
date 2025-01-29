@@ -2,7 +2,21 @@ const dbClient = require('../config/db');
 
 exports.getVolunteers = async (req, res) => {
   try {
-    const result = await dbClient.query('SELECT * FROM public."Camp_Volunteers"');
+    const result = await dbClient.query(`SELECT 
+    public."Camp_Volunteers"."Id",
+    public."User"."FirstName",
+    public."User"."LastName",
+    public."Camp_Data"."Name" AS "CampName"
+FROM 
+    public."Camp_Volunteers"
+LEFT JOIN 
+    public."User" 
+ON 
+    public."Camp_Volunteers"."UserId" = public."User"."Id"
+JOIN 
+    public."Camp_Data" 
+ON 
+    public."Camp_Volunteers"."CampId" = public."Camp_Data"."Id";`);
     res.json(result.rows);
   } catch (error) {
     console.error(error);
@@ -44,10 +58,10 @@ exports.createVolunteer = async (req, res) => {
   }
 };
 exports.updateVolunteer=async(req,res)=>{
-  const { id, UserId,CampId} = req.body; 
+  const { Id, UserId,CampId} = req.body; 
   try{
       const result=await dbClient.query('UPDATE "Camp_Volunteers" SET "UserId" = $2, "CampId" = $3 WHERE "Id" = $1',
-          [ id, UserId,CampId]
+          [ Id, UserId,CampId]
       );
       if (result.rows.length > 0) {
           res.json(result.rows[0]); 

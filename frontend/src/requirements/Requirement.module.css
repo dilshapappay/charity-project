@@ -1,3 +1,16 @@
+.tableContainer {
+  
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.tableContainer h2 {
+    margin-bottom: 20px;
+    color: #2d8144;
+}
 .actionIcons i:hover{
     color:#2d8144;
     cursor: pointer;

@@ -8,9 +8,8 @@ const campRoutes = require('./campRoutes');
 const requirementRoutes = require('./requirementRoutes');
 const orderRoutes=require('./orderRoutes');
 const volunteerRoutes=require('./volunteerRoutes');
-
+const accountRoutes = require('./accountRoutes');
  
-
 
 router.use('/users', userRoutes);
 router.use('/items',itemsRoutes);
@@ -19,5 +18,6 @@ router.use('/camps', campRoutes);
 router.use('/requirements',requirementRoutes);
 router.use('/orders', orderRoutes);
 router.use('/volunteers',volunteerRoutes);
+router.use('/account', accountRoutes);
 
 module.exports = router;

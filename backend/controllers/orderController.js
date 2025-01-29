@@ -2,7 +2,23 @@ const dbClient = require('../config/db');
 
 exports.getOrders = async (req, res) => {
   try {
-    const result = await dbClient.query('SELECT * FROM public."Orders"');
+    const result = await dbClient.query (` SELECT 
+    public."Orders"."Id",
+    public."User"."FirstName",
+    public."User"."LastName",
+    public."Items"."Name" AS "ProductName",
+     public."Orders"."StatusId",
+    public."Orders"."Quantity"
+
+FROM 
+    public."Orders"
+LEFT JOIN 
+    public."User" ON public."Orders"."UserId" = public."User"."Id"
+ JOIN 
+    public."Items" ON public."Orders"."RequirementId" = public."Items"."Id";
+
+    `);
+
     res.json(result.rows);
   } catch (error) {
     console.error(error);
@@ -29,13 +45,13 @@ exports.getOrderById=async(req,res)=>{
 }
 
 exports.createOrder = async (req, res) => {
-  const { RequirementId, StatusId, UserId,Quantity } = req.body;
+  const { UserId,RequirementId, StatusId,Quantity } = req.body;
 
   try {
     const result = await dbClient.query(
-      `INSERT INTO public."Orders"("RequirementId", "StatusId", "UserId","Quantity")
+      `INSERT INTO public."Orders"( "UserId","RequirementId", "StatusId","Quantity")
     VALUES ($1, $2, $3, $4)`,
-      [RequirementId, StatusId, UserId,Quantity]
+      [UserId,RequirementId, StatusId,Quantity]
     );
     res.status(201).json({ message: 'Order inserted successfully', user: result.rows[0] });
   } catch (error) {

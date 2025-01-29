@@ -8,4 +8,5 @@ router.get('/', roleController.getRoles);
 router.get('/:id', roleController.getRoleById);
 
 router.post('/', validate(roleSchema),roleController.createRoles);
+router.delete('/:id', roleController.deleteRoles);
 module.exports = router;
