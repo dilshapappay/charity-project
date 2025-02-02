@@ -1,6 +1,10 @@
 const dbClient = require('../config/db');
 
 exports.getVolunteers = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; 
+  const limit = parseInt(req.query.limit) || 10; 
+  const offset = (page - 1) * limit;
+
   try {
     const result = await dbClient.query(`SELECT 
     public."Camp_Volunteers"."Id",
@@ -16,8 +20,17 @@ ON
 JOIN 
     public."Camp_Data" 
 ON 
-    public."Camp_Volunteers"."CampId" = public."Camp_Data"."Id";`);
-    res.json(result.rows);
+    public."Camp_Volunteers"."CampId" = public."Camp_Data"."Id"  LIMIT $1 OFFSET $2`, [limit, offset]);
+
+    const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Orders"');
+    const totalItems = parseInt(totalResult.rows[0].count);
+    res.json({
+      page,
+      limit,
+      totalItems,
+      totalPages: Math.ceil(totalItems / limit),
+      data: result.rows
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to retrieve Volunteers' });

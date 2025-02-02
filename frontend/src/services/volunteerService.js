@@ -1,7 +1,7 @@
 const API_URL = process.env.REACT_APP_API_URL;
 
-export function getVolunteers(){
-    return fetch(`${API_URL}/volunteers`)
+export function getVolunteers(page = 1, limit = 10){
+    return fetch(`${API_URL}/volunteers?page=${page}&limit=${limit}`)
     .then(response => response.json())
     .then(data => data);
 }

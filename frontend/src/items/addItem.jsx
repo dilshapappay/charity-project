@@ -1,16 +1,40 @@
-import React, { useState } from 'react';
-import { createItems } from '../services/itemService';
+import React, { useState,useEffect } from 'react';
+import { createItems,updateItem,getItemById } from '../services/itemService';
 import styles from './addItem.module.css';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export default function AddItemForm() {
+    const navigate = useNavigate();
+      const { id } = useParams();
     const [item, setItem] = useState({
         Name: '',
         Description: '',
     });
+      const [isEditMode, setIsEditMode] = useState(false);
+    
 
-    const navigate = useNavigate();
+      useEffect(() => {
+          console.log("Item ID:", id);
+          if (id) {
+            setIsEditMode(true);
+            const fetchItems = async function () {
+              try {
+                const item = await getItemById(id);
+                console.log("Fetched item:", item);
+                setItem({
+                  Id:id,
+                  Name: item.Name,
+                  Description: item.Description,
+                });
+              } catch (error) {
+                console.error("Error fetching item:", error);
+              }
+            };
+            fetchItems ();
+          }
+        }, [id]);
+      
 
 
     const handleChange = (e) => {
@@ -20,19 +44,24 @@ export default function AddItemForm() {
         });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const newItem = await createItems(item);
-            console.log('Item successfully created:', newItem);
-            alert('Item added successfully!');
-            navigate('/main/items');
-        } catch (error) {
-            console.error('Error creating item:', error);
-            alert('Error creating item. Please try again.');
-        }
-    };
-
+   
+     const handleSubmit = async (e) => {
+       e.preventDefault();
+       try {
+         if (isEditMode) {
+   
+           await updateItem(item);
+           alert("Item updated successfully");
+         } else {
+           await createItems(item);
+           alert("Item added successfully");
+         }
+         navigate("/main/items");
+       } catch (error) {
+         console.error("Error saving item:", error);
+         alert("Error saving item");
+       }
+     };
     const handleReset = () => {
         setItem({
             Name: '',
@@ -42,8 +71,8 @@ export default function AddItemForm() {
 
     return (
         <div className={styles.formContainer}>
-            <h2>Add Item</h2>
-            <form onSubmit={handleSubmit}>
+      <h2>{isEditMode ? "Update Item" : "Add Item"}</h2>
+      <form onSubmit={handleSubmit}>
                 <div className={styles.formGroup}>
                     <label htmlFor="Name">Item Name</label>
                     <input
@@ -68,8 +97,8 @@ export default function AddItemForm() {
                     <button type="reset" onClick={handleReset}>
                         Reset
                     </button>
-                    <button type="submit">Submit</button>
-                </div>
+                    <button type="submit"> {isEditMode ? "Update" : "Submit"}</button>
+                    </div>
             </form>
         </div>
     );

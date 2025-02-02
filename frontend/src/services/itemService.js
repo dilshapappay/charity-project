@@ -6,11 +6,33 @@ export function getItems(){
     .then(data => data);
 }
 
+export function getItemById(id){
+  return fetch(`${API_URL}/items/${id}`, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+}).then(response => response.json());
+}
 export function createItems(item){
     return fetch(`${API_URL}/items`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(item),
+    })
+    .then(response => response.json())
+    .then(data => data);
+}
+
+
+export function updateItem(item){
+  debugger
+    return fetch(`${API_URL}/items`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify(item),
     })

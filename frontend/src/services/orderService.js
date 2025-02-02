@@ -1,8 +1,8 @@
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export function  getOrders(){
-    return fetch(`${API_URL}/Orders`)
+export function  getOrders(page = 1, limit = 10){
+    return fetch(`${API_URL}/Orders?page=${page}&limit=${limit}`)
     .then(response => response.json())
     .then(data => data);
 }
@@ -19,6 +19,7 @@ export function getOrderById(id){
 
 
 export function createOrder(order){
+  
     return fetch(`${API_URL}/Orders`, {
         method: 'POST',
         headers: {
@@ -31,6 +32,7 @@ export function createOrder(order){
 }
 
 export function updateOrder(order){
+  
     return fetch(`${API_URL}/Orders`, {
         method: 'PUT',
         headers: {

@@ -45,10 +45,10 @@ exports.createItems = async (req, res) => {
   };
 
   exports.updateItem=async(req,res)=>{
-    const { id,Name,Description } = req.body; 
+    const { Id,Name,Description } = req.body; 
     try{
         const result=await dbClient.query('UPDATE "Items" SET "Name" = $2, "Description" = $3 WHERE "Id" = $1',
-            [ id,Name,Description]
+            [ Id,Name,Description]
         );
         if (result.rows.length > 0) {
             res.json(result.rows[0]); 

@@ -4,10 +4,13 @@ import { useState, useEffect } from 'react';
 import styles from './item.module.css';
 import AddItemForm from './addItem';
 import { getItems,deleteItem } from '../services/itemService';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Items() {
     const [items, setItems] = useState([]);
     const [showForm, setShowForm] = useState(false);
+    const navigate = useNavigate();
 
     const fetchItems = async function () {
         const items = await getItems();
@@ -34,6 +37,9 @@ const handleDeleteClick = async (Id) => {
         }
       };
 
+      const handleEditClick = (id) => {
+        navigate(`/main/editItem/${id}`);
+    };
 
     return (
         <div className={styles.tableContainer}>
@@ -59,7 +65,7 @@ const handleDeleteClick = async (Id) => {
                             <td>{item.Description}</td>
                             <td>
                                 <div className={styles.actionIcons}>
-                                    <i className="material-icons">edit</i>
+                                    <i className="material-icons"  onClick={() => handleEditClick(item.Id)}>edit</i>
                                     <i className="material-icons" 
                                     onClick={() => handleDeleteClick(item.Id)} >delete</i>
                                 </div>

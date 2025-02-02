@@ -13,7 +13,7 @@ export default function AddOrderForm() {
      const navigate = useNavigate();
       const { id } = useParams();
     const [formData, setFormData] = useState({
-        Id:'',
+        
         UserId: '',
         RequirementId: '',
         StatusId: '',
@@ -93,6 +93,7 @@ export default function AddOrderForm() {
            await createOrder(formData);
            alert("Order added successfully");
          }
+         
          navigate("/main/orders");
        } catch (error) {
          console.error("Error saving order:", error);

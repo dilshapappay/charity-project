@@ -9,6 +9,9 @@ import { useNavigate } from 'react-router-dom';
 
  export default function Orders() {
     const [orders, setOrders] = useState([]); 
+    const [page, setPage] = useState(1);
+    const limit = 10;
+    const [totalPages, setTotalPages] = useState(1);
    const [showForm, setShowForm] = useState(false);
    const navigate = useNavigate();
 
@@ -16,16 +19,17 @@ import { useNavigate } from 'react-router-dom';
 
     const fetchOrders = async function () {
         try {
-            const orders = await getOrders();
-            setOrders(orders);
+           const response = await getOrders(page, limit);
+                  setOrders(response.data);
+                  setTotalPages(response.totalPages);
         } catch (error) {
             console.error('Error fetching orders:', error);
         }
     }
 
     useEffect(() => {
-        fetchOrders();
-    }, []);
+        fetchOrders(page, limit);
+    }, [page, limit]);
 
     const handleAddClick = () => {
         setShowForm(true);
@@ -46,6 +50,19 @@ import { useNavigate } from 'react-router-dom';
       const handleEditClick = (Id) => {
         navigate(`/main/editOrder/${Id}`);
     };
+
+    const handleNextPage = () => {
+        if (page < totalPages) {
+          setPage(page + 1);
+        }
+      };
+    
+      const handlePreviousPage = () => {
+        if (page > 1) {
+          setPage(page - 1);
+        }
+      };
+    
     
 
     
@@ -84,6 +101,11 @@ import { useNavigate } from 'react-router-dom';
                     ))}
                 </tbody>
             </table>
+             <div className={styles.pagination}>
+                    <button onClick={handlePreviousPage} disabled={page === 1}>Previous</button>
+                    <span>Page {page} of {totalPages}</span>
+                    <button onClick={handleNextPage} disabled={page === totalPages}>Next</button>
+                  </div>
         </div>
     );
 }

@@ -15,9 +15,9 @@ export default function AddVolunteerForm() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [formData, setFormData] = useState({
-    Id: "",
-    UserId: "",
-    CampId: "",
+    
+    UserId: '',
+    CampId: '',
   });
 
   const [camps, setCamps] = useState([]);

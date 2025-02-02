@@ -31,7 +31,9 @@ function App() {
             <Route path="addCamp" element={<AddCampForm />} />
             <Route path="items" element={<Items />} />
             <Route path="addItem" element={<AddItemForm />} />
-            <Route path="volunteers" element={<Volunteers />} />
+            <Route path="editItem/:id" element={<AddItemForm/>} />
+
+             <Route path="volunteers" element={<Volunteers />} />
             <Route path="addVolunteer" element={<AddVolunteerForm />} />
             <Route path="editVolunteer/:id" element={<AddVolunteerForm/>} />
             <Route path="orders" element={<Orders />} />

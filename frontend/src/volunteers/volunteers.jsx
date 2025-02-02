@@ -7,25 +7,29 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Volunteers() {
     const [volunteers, setVolunteers] = useState([]);
+    const [page, setPage] = useState(1);
+    const limit = 10;
+    const [totalPages, setTotalPages] = useState(1);
     const [showForm, setShowForm] = useState(false);
     const navigate = useNavigate();
 
     const fetchVolunteers = async function () {
-        const volunteers = await getVolunteers();
-        setVolunteers(volunteers);
+        const response = await getVolunteers(page, limit);
+        setVolunteers(response.data);
+        setTotalPages(response.totalPages);
     }
 
     useEffect(() => {
-        fetchVolunteers();
-    }, []);
+        fetchVolunteers(page, limit);
+    }, [page, limit]);
 
     const handleAddClick = () => {
         setShowForm(true);
     }
-     const handleDeleteClick = async (Id) => {
+     const handleDeleteClick = async (id) => {
             if (window.confirm("Are you sure you want to delete this order?")) {
               try {
-                var result = await deleteVolunteer(Id);
+                var result = await deleteVolunteer(id);
                 alert(result.message);
                 fetchVolunteers();
               } catch (error) {
@@ -35,9 +39,21 @@ export default function Volunteers() {
             }
           };
     
-          const handleEditClick = (Id) => {
-            navigate(`/main/editVolunteer/${Id}`);
+          const handleEditClick = (id) => {
+            navigate(`/main/editVolunteer/${id}`);
         };
+
+        const handleNextPage = () => {
+            if (page < totalPages) {
+              setPage(page + 1);
+            }
+          };
+        
+          const handlePreviousPage = () => {
+            if (page > 1) {
+              setPage(page - 1);
+            }
+          };
         
     return (
         <div className={styles.tableContainer}>
@@ -73,6 +89,12 @@ export default function Volunteers() {
                     ))}
                 </tbody>
             </table>
+
+            <div className={styles.pagination}>
+        <button onClick={handlePreviousPage} disabled={page === 1}>Previous</button>
+        <span>Page {page} of {totalPages}</span>
+        <button onClick={handleNextPage} disabled={page === totalPages}>Next</button>
+      </div>
         </div>
     );
 }
