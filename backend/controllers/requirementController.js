@@ -4,7 +4,12 @@ exports.getRequirements = async (req, res) => {
   try {
     let sql = `SELECT 
                 public."Requirement"."Id",
-    public."Items"."Name", public."Items"."Description", public."Requirement"."RequiredQuantity",public."Requirement"."AchievedQuantity", public."Camp_Data"."District" 
+    public."Items"."Name",
+     public."Items"."Description",
+      public."Requirement"."RequiredQuantity",
+      public."Requirement"."AchievedQuantity", 
+      public."Camp_Data"."District",
+      public."Requirement"."StatusId"
                FROM public."Requirement" 
                JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id" 
                JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"`;

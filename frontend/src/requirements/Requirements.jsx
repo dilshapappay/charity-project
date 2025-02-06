@@ -3,10 +3,15 @@ import { getRequirements,deleteRequirement} from "../services/requirementService
 import styles from "./Requirement.module.css";
 import { Link } from "react-router-dom";
 import AddRequirementForm from "./addRequirement";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Requirements() {
   const [requirements, setRequirements] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const navigate = useNavigate();
+
+
   const fetchRequirements = async () => {
     const requirements = await getRequirements();
     setRequirements(requirements);
@@ -32,8 +37,11 @@ export default function Requirements() {
             }
           }
         };
-  
-
+        const handleEditClick = (id) => {
+          navigate(`/main/editRequirement/${id}`);
+      };
+    
+      
   return (
     <div className={styles.tableContainer}>
       <h2>Requirement Details</h2>
@@ -70,7 +78,7 @@ export default function Requirements() {
               <td>
               
                 <div className={styles.actionIcons}>
-                  <i className="material-icons">edit</i>
+                  <i className="material-icons"onClick={() => handleEditClick(requirement.Id)} >edit</i>
 
                   <i className="material-icons" onClick={() => handleDeleteClick(requirement.Id)} >delete</i>
                 </div>
@@ -81,4 +89,4 @@ export default function Requirements() {
       </table>
     </div>
   );
-}
+};

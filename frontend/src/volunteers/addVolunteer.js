@@ -50,7 +50,7 @@ export default function AddVolunteerForm() {
       try {
         const camps = await getCamps();
         console.log("Fetched camps:", camps);
-        setCamps(camps);
+        setCamps(camps.data);
       } catch (error) {
         console.error("Error fetching camps:", error);
       }

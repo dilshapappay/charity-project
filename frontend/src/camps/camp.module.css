@@ -18,3 +18,32 @@
 .addButton:hover {
     background-color: #236832;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    padding: 8px 15px;
+    margin: 0 10px;
+    background-color: #2d8144;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .pagination button:disabled {
+    background-color: #d6d6d6;
+    cursor: not-allowed;
+  }
+  
+  .pagination button:hover {
+    background-color: #236832;
+  }
+  

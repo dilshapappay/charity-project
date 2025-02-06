@@ -27,8 +27,13 @@ function App() {
             <Route path="addUser" element={<AddUserForm />} />
             <Route path="requirements" element={<Requirements />} />
             <Route path="addRequirement" element={<AddRequirementForm />} />
+            <Route path="editRequirement/:id" element={<AddRequirementForm/>} />
+
+            
             <Route path="camps" element={<Camps />} />
             <Route path="addCamp" element={<AddCampForm />} />
+            <Route path="editCamp/:id" element={<AddCampForm/>} />
+
             <Route path="items" element={<Items />} />
             <Route path="addItem" element={<AddItemForm />} />
             <Route path="editItem/:id" element={<AddItemForm/>} />
@@ -36,6 +41,7 @@ function App() {
              <Route path="volunteers" element={<Volunteers />} />
             <Route path="addVolunteer" element={<AddVolunteerForm />} />
             <Route path="editVolunteer/:id" element={<AddVolunteerForm/>} />
+            
             <Route path="orders" element={<Orders />} />
             <Route path="addOrder" element={<AddOrderForm />} />
             <Route path="editOrder/:id" element={<AddOrderForm/>} />

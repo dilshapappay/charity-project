@@ -1,7 +1,7 @@
 const API_URL = process.env.REACT_APP_API_URL;
 
-export function getItems(){
-    return fetch(`${API_URL}/items`)
+export function getItems(page = 1, limit = 10){
+    return fetch(`${API_URL}/items?page=${page}&limit=${limit}`)
     .then(response => response.json())
     .then(data => data);
 }

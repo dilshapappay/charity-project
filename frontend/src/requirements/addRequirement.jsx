@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { createRequirement } from '../services/requirementService';
+import { createRequirement,getRequirementById,updateRequirement } from '../services/requirementService';
 import{getItems} from '../services/itemService';
 import styles from './addRequirement.module.css';
 import { getCamps } from '../services/campService';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export default function AddRequirementForm() {
+     const navigate = useNavigate();
+      const { id } = useParams();
     const [requirement,setRequirement] = useState({
         ItemId : '',
         CampId : '',
@@ -18,7 +20,7 @@ export default function AddRequirementForm() {
 
     const [items, setItems] = useState([]);
     const [camps, setCamps] = useState([]);
-        const navigate = useNavigate();
+  const [isEditMode, setIsEditMode] = useState(false);
     
 
 
@@ -27,7 +29,7 @@ export default function AddRequirementForm() {
             try {
                 const items = await getItems();
                 console.log(items);
-                setItems(items);
+                setItems(items.data);
             } catch (error) {
                 console.error('Error fetching items:', error);
             }
@@ -40,7 +42,7 @@ export default function AddRequirementForm() {
                 try {
                     const camps = await getCamps();
                     console.log(camps);
-                    setCamps(camps);
+                    setCamps(camps.data);
                 } catch (error) {
                     console.error('Error fetching camps:', error);
                 }
@@ -49,6 +51,29 @@ export default function AddRequirementForm() {
             }, []);
 
 
+            useEffect(() => {
+                console.log("Requirement ID:", id);
+                if (id) {
+                  setIsEditMode(true);
+                  const fetchRequirement = async function () {
+                    try {
+                      const requirement = await getRequirementById(id);
+                      console.log("Fetched requirement:", requirement);
+                      setRequirement({
+                        Id:id,
+                        ItemId :requirement.ItemId ,
+                        CampId : requirement.CampId,
+                        StatusId:requirement.StatusId ,
+                        RequiredQuantity:requirement.RequiredQuantity ,
+                        AchievedQuantity: requirement.AchievedQuantity,
+                      });
+                    } catch (error) {
+                      console.error("Error fetching requirement:", error);
+                    }
+                  };
+                  fetchRequirement();
+                }
+              }, [id]);
 
             const handleChange = (e) => {
                 setRequirement({
@@ -57,18 +82,23 @@ export default function AddRequirementForm() {
                 });
               };
     
-        const handleSubmit = async (e) => {
-            e.preventDefault(); 
-            try {
-            const newRequirement = await createRequirement(requirement); 
-            console.log('Requirement successfully created:', newRequirement);
-            alert('Requirement added successfully!');
-            navigate('/main/requirements');
-
-            } catch (error) {
-            console.error('Error creating requirement:', error);
-            }
-        };
+     const handleSubmit = async (e) => {
+         e.preventDefault();
+         try {
+           if (isEditMode) {
+     
+             await updateRequirement(requirement);
+             alert("Requirement updated successfully");
+           } else {
+             await createRequirement(requirement);
+             alert("Requirement added successfully");
+           }
+           navigate("/main/Requirements");
+         } catch (error) {
+           console.error("Error saving Requirement:", error);
+           alert("Error saving Requirement");
+         }
+       };
 
         const handleReset = () => {
             setRequirement({
@@ -84,8 +114,8 @@ export default function AddRequirementForm() {
     return (
 
         <div className={styles.formContainer}>
-        <h2>Add Requirement</h2>
-        <form onSubmit={handleSubmit}>
+      <h2>{isEditMode ? "Update Requirement" : "Add Requirement"}</h2>
+      <form onSubmit={handleSubmit}>
             <div className={styles.formGroup}>
             <label>Item </label>
             <select name="ItemId" value={requirement.ItemId} onChange={handleChange}>
@@ -142,10 +172,9 @@ export default function AddRequirementForm() {
             </div>
           <div className={styles.buttonGroup}>
                     <button type="reset" onClick={handleReset}>Reset</button>
-                    <button type="submit">Submit</button>
-                  </div>
+                    <button type="submit"> {isEditMode ? "Update" : "Submit"}</button>
+                    </div>
                           </form>
         </div>
   );
 }
-

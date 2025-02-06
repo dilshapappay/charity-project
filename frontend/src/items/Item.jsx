@@ -9,17 +9,21 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Items() {
     const [items, setItems] = useState([]);
+    const [page, setPage] = useState(1);
+    const limit = 10;
+    const [totalPages, setTotalPages] = useState(1);
     const [showForm, setShowForm] = useState(false);
     const navigate = useNavigate();
 
     const fetchItems = async function () {
-        const items = await getItems();
-        setItems(items);
+         const response = await getItems(page, limit);
+                setItems(response.data);
+                setTotalPages(response.totalPages);
     }
 
     useEffect(() => {
-        fetchItems();
-    }, []);
+        fetchItems(page, limit);
+    }, [page, limit]);
 
     const handleAddClick = () => {
         setShowForm(true);
@@ -40,6 +44,17 @@ const handleDeleteClick = async (Id) => {
       const handleEditClick = (id) => {
         navigate(`/main/editItem/${id}`);
     };
+    const handleNextPage = () => {
+        if (page < totalPages) {
+          setPage(page + 1);
+        }
+      };
+    
+      const handlePreviousPage = () => {
+        if (page > 1) {
+          setPage(page - 1);
+        }
+      };
 
     return (
         <div className={styles.tableContainer}>
@@ -74,6 +89,11 @@ const handleDeleteClick = async (Id) => {
                     ))}
                 </tbody>
             </table>
+              <div className={styles.pagination}>
+                    <button onClick={handlePreviousPage} disabled={page === 1}>Previous</button>
+                    <span>Page {page} of {totalPages}</span>
+                    <button onClick={handleNextPage} disabled={page === totalPages}>Next</button>
+                  </div>
         </div>
     );
 }

@@ -12,6 +12,26 @@ export function getRequirements(data){
     .then(data => data);
 }
 
+export function getVolunteerById(id){
+  return fetch(`${API_URL}/requirements/${id}`, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+}).then(response => response.json());
+}
+
+
+export function getRequirementById(id){
+  return fetch(`${API_URL}/requirements/${id}`, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+}).then(response => response.json());
+}
+
+
 
 export function createRequirement(requirement){
     return fetch(`${API_URL}/requirements`, {
@@ -26,6 +46,19 @@ export function createRequirement(requirement){
     .then(response => response.json())
     .then(data => data);
 }
+
+export function updateRequirement(requirement){
+    return fetch(`${API_URL}/requirements`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requirement),
+    })
+    .then(response => response.json())
+    .then(data => data);
+}
+
 
 export function deleteRequirement(id) {
     return fetch(`${API_URL}/requirements`, {

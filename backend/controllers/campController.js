@@ -1,6 +1,10 @@
 const dbClient = require('../config/db');
 
 exports.getCamps = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; 
+  const limit = parseInt(req.query.limit) || 10; 
+  const offset = (page - 1) * limit;
+
     try {
         const result = await dbClient.query(`
             SELECT 
@@ -18,9 +22,16 @@ exports.getCamps = async (req, res) => {
             JOIN 
                 public."User" 
             ON 
-                public."Camp_Data"."CampAdminId" = public."User"."Id";
-        `); 
-        res.json(result.rows);
+                public."Camp_Data"."CampAdminId" = public."User"."Id"  LIMIT $1 OFFSET $2`, [limit, offset] ); 
+                const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Camp_Data"');
+                const totalItems = parseInt(totalResult.rows[0].count);
+                res.json({
+                  page,
+                  limit,
+                  totalItems,
+                  totalPages: Math.ceil(totalItems / limit),
+                  data: result.rows
+                });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Failed to retrieve camp' });
@@ -62,10 +73,10 @@ exports.getCamps = async (req, res) => {
   };
 
   exports.updateCamp=async(req,res)=>{
-    const { id,CampAdminId,Name,Description,LocationAddress} = req.body; 
+    const { Id,CampAdminId,Name,Description,District,LocationAddress} = req.body; 
     try{
-        const result=await dbClient.query('UPDATE "Camp_Data" SET "CampAdminId" = $2, "Name" = $3, "Description" = $4, "LocationAddress" = $5 WHERE "Id" = $1',
-            [id ,CampAdminId,Name,Description,LocationAddress]
+        const result=await dbClient.query('UPDATE "Camp_Data" SET "CampAdminId" = $2, "Name" = $3, "Description" = $4, "District"=$5, "LocationAddress" = $6 WHERE "Id" = $1',
+            [Id ,CampAdminId,Name,Description,District,LocationAddress]
         );
         if (result.rows.length > 0) {
             res.json(result.rows[0]); 
@@ -77,7 +88,7 @@ exports.getCamps = async (req, res) => {
       res.status(500).json({ error: 'Failed to update camp' });
     }
   }
-  
+    
   exports.deleteCamp = async (req, res) => {
     const { id } = req.body;
     try {

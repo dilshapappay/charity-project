@@ -1,10 +1,20 @@
 const dbClient = require('../config/db');
 
 exports.getItems = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; 
+  const limit = parseInt(req.query.limit) || 10; 
+  const offset = (page - 1) * limit;
   try {
-    const result = await dbClient.query('SELECT * FROM public."Items"');
-    res.json(result.rows);
-  } catch (error) {
+    const result = await dbClient.query(`SELECT * FROM public."Items"LIMIT $1 OFFSET $2`, [limit, offset]);
+    const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Items"');
+    const totalItems = parseInt(totalResult.rows[0].count);
+    res.json({
+      page,
+      limit,
+      totalItems,
+      totalPages: Math.ceil(totalItems / limit),
+      data: result.rows
+    });  } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to retrieve Items' });
   }
