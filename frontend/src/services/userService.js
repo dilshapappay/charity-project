@@ -1,7 +1,7 @@
 const API_URL = process.env.REACT_APP_API_URL;
 
-export function getUsers(){
-    return fetch(`${API_URL}/users`)
+export function getUsers(page = 1, limit = 10){
+    return fetch(`${API_URL}/users?page=${page}&limit=${limit}`)
     .then(response => response.json())
     .then(data => data);
 }
@@ -22,7 +22,7 @@ export function createUsers(user){
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(user ),
 })
 
 

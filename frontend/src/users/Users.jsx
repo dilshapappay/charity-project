@@ -10,18 +10,22 @@ import { useNavigate } from "react-router-dom";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  const [totalPages, setTotalPages] = useState(1);
   const [showForm, setShowForm] = useState(false);
   const navigate = useNavigate();
 
 
   const fetchUsers = async function () {
-    const users = await getUsers();
-    setUsers(users);
+      const response = await getUsers(page, limit);
+            setUsers(response.data);
+            setTotalPages(response.totalPages);
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    fetchUsers(page, limit);
+  }, [page, limit]);
 
   const handleAddClick = () => {
     setShowForm(true);
@@ -41,6 +45,18 @@ export default function Users() {
 
   const handleEditClick = (id) => {
     navigate(`/main/editUser/${id}`);
+};
+
+const handleNextPage = () => {
+  if (page < totalPages) {
+    setPage(page + 1);
+  }
+};
+
+const handlePreviousPage = () => {
+  if (page > 1) {
+    setPage(page - 1);
+  }
 };
   return (
     <div className={styles.tableContainer}>
@@ -90,6 +106,11 @@ export default function Users() {
           ))}
         </tbody>
       </table>
+       <div className={styles.pagination}>
+              <button onClick={handlePreviousPage} disabled={page === 1}>Previous</button>
+              <span>Page {page} of {totalPages}</span>
+              <button onClick={handleNextPage} disabled={page === totalPages}>Next</button>
+            </div>
     </div>
   );
 }

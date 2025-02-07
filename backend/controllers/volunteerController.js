@@ -22,7 +22,7 @@ JOIN
 ON 
     public."Camp_Volunteers"."CampId" = public."Camp_Data"."Id"  LIMIT $1 OFFSET $2`, [limit, offset]);
 
-    const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Orders"');
+    const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Camp_Volunteers"');
     const totalItems = parseInt(totalResult.rows[0].count);
     res.json({
       page,

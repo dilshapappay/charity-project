@@ -5,8 +5,12 @@ const { send } = require("process");
 const sendPasswordEmail = require('../Services/EmailServices');
 
 exports.getUsers = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; 
+  const limit = parseInt(req.query.limit) || 10; 
+  const offset = (page - 1) * limit;
+
   try {
-    let sql = `SELECT 
+    const result = await dbClient.query(`SELECT 
   public."User"."Id",
  public."Role"."RoleName",
   public."User"."FirstName",
@@ -18,13 +22,20 @@ exports.getUsers = async (req, res) => {
 FROM 
   public."User" 
 JOIN 
-  public."Role" 
+  public."Role"  
 ON 
-  public."User"."RoleId" = public."Role"."id";`;
+  public."User"."RoleId" = public."Role"."id" LIMIT $1 OFFSET $2`, [limit, offset])
 
-    const result = await dbClient.query(sql);
-    res.json(result.rows);
-  } catch (error) {
+    
+  const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."User"');
+    const totalItems = parseInt(totalResult.rows[0].count);
+    res.json({
+      page,
+      limit,
+      totalItems,
+      totalPages: Math.ceil(totalItems / limit),
+      data: result.rows
+    });  } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to retrieve users" });
   }
@@ -48,6 +59,7 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
+
   try{
     const { FirstName, LastName, RoleId, Email, Address, Mobile } =
     req.body;
