@@ -6,6 +6,16 @@ export function getUsers(){
     .then(data => data);
 }
 
+
+export function getUserById(id){
+  return fetch(`${API_URL}/users/${id}`, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+}).then(response => response.json());
+}
+
 export function createUsers(user){
     return fetch(`${API_URL}/users`, {
         method: 'POST',
@@ -19,6 +29,19 @@ export function createUsers(user){
     .then(response => response.json())
     .then(data => data);
 }
+
+export function updateUser(user){
+    return fetch(`${API_URL}/users`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+    })
+    .then(response => response.json())
+    .then(data => data);
+}
+
 export function deleteUser(id) {
     return fetch(`${API_URL}/users`, {
       method: "DELETE",

@@ -5,9 +5,15 @@ import { Link } from "react-router-dom";
 import styles from "./users.module.css";
 import AddUserForm from "./addUser";
 
+import { useNavigate } from "react-router-dom";
+
+
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const navigate = useNavigate();
+
+
   const fetchUsers = async function () {
     const users = await getUsers();
     setUsers(users);
@@ -32,6 +38,10 @@ export default function Users() {
       }
     }
   };
+
+  const handleEditClick = (id) => {
+    navigate(`/main/editUser/${id}`);
+};
   return (
     <div className={styles.tableContainer}>
       <h2>User Details</h2>
@@ -66,7 +76,7 @@ export default function Users() {
               <td>
                 {" "}
                 <div className={styles.actionIcons}>
-                  <i className="material-icons">edit</i>
+                  <i className="material-icons" onClick={() => handleEditClick(user.Id)}>edit</i>
 
                   <i
                     className="material-icons"

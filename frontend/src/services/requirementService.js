@@ -12,14 +12,7 @@ export function getRequirements(data){
     .then(data => data);
 }
 
-export function getVolunteerById(id){
-  return fetch(`${API_URL}/requirements/${id}`, {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-}).then(response => response.json());
-}
+
 
 
 export function getRequirementById(id){

@@ -13,7 +13,8 @@ exports.getUsers = async (req, res) => {
    public."User"."LastName",
    public."User"."Email",
    public."User"."Address",
-   public."User"."Mobile"
+   public."User"."Mobile",
+   public."User"."Password"
 FROM 
   public."User" 
 JOIN 
@@ -77,12 +78,12 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  const { id, firstName, lastName, roleId, password, email, address, mobile } =
+  const { Id, FirstName, LastName, RoleId, Password,Email, Address, Mobile } =
     req.body;
   try {
     const result = await dbClient.query(
       'UPDATE "User"SET "FirstName" = $2, "LastName" = $3, "RoleId" = $4, "Password" = $5,  "Email" = $6, "Address" = $7, "Mobile" = $8 WHERE "Id" = $1',
-      [id, firstName, lastName, roleId, password, email, address, mobile]
+      [Id, FirstName, LastName, RoleId, Password,Email, Address, Mobile]
     );
     if (result.rows.length > 0) {
       res.json(result.rows[0]);

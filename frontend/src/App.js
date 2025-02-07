@@ -25,6 +25,8 @@ function App() {
           <Route path="/main" element={<Main />} >
             <Route path="users" element={<Users/>} />
             <Route path="addUser" element={<AddUserForm />} />
+            <Route path="editUser/:id" element={<AddUserForm/>} />
+
             <Route path="requirements" element={<Requirements />} />
             <Route path="addRequirement" element={<AddRequirementForm />} />
             <Route path="editRequirement/:id" element={<AddRequirementForm/>} />

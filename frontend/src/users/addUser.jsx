@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { createUsers } from '../services/userService';
+import { createUsers,getUserById,updateUser } from '../services/userService';
 import { getRoles } from '../services/roleService';
 import styles from './addUser.module.css';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 
 export default function AddUserForm() {
+  const navigate = useNavigate();
+    const { id } = useParams();
     const [user, setUser] = useState({
         FirstName: '',
         LastName: '',
@@ -18,20 +20,46 @@ export default function AddUserForm() {
       });
 
   const [roles, setRoles] = useState([]);
-  const navigate = useNavigate();
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
     const fetchRoles = async function () {
       try {
         const roles = await getRoles();
         console.log(roles);
-        setRoles(roles);
+        setRoles(roles );
       } catch (error) {
         console.error('Error fetching roles:', error);
       }
     };
     fetchRoles();
   }, []);
+
+useEffect(() => {
+    console.log("User ID:", id);
+    if (id) {
+      setIsEditMode(true);
+      const fetchUser = async function () {
+        try {
+          const user = await getUserById(id);
+          console.log("Fetched user:", user);
+          setUser({
+            Id:id,
+            FirstName:user.FirstName,
+            LastName: user.LastName,
+            Email: user.Email,
+            Password: user.Password,
+            RoleId: user.RoleId,
+            Address: user.Address,
+            Mobile: user.Mobile,
+          });
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        }
+      };
+      fetchUser();
+    }
+  }, [id]);
 
   const handleChange = (e) => {
     setUser({
@@ -41,19 +69,22 @@ export default function AddUserForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
-    try {
-      const newUser = await createUsers(user);
-      console.log('New user created:', newUser);
-      setUser([...user, newUser]); 
-      alert('User added successfully');
-      navigate('/main/users');
-    }
-    catch (error) {
-      console.error('Error creating user:', error);
-      alert('Error creating user');
-    }
-  };
+     e.preventDefault();
+     try {
+       if (isEditMode) {
+ 
+         await updateUser(user);
+         alert("User updated successfully");
+       } else {
+         await createUsers(user);
+         alert("User added successfully");
+       }
+       navigate("/main/users");
+     } catch (error) {
+       console.error("Error saving user:", error);
+       alert("Error saving user");
+     }
+   };
 
   const handleReset = () => {
     setUser({
@@ -70,7 +101,7 @@ export default function AddUserForm() {
 
   return (
     <div className={styles.formContainer}>
-      <h2>Add User</h2>
+      <h2>{isEditMode ? "Update User" : "Add User"}</h2>
       <form onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
           <label>First Name</label>
@@ -142,7 +173,7 @@ export default function AddUserForm() {
         </div>
         <div className={styles.buttonGroup}>
           <button type="reset" onClick={handleReset}>Reset</button>
-          <button type="submit">Submit</button>
+          <button type="submit"> {isEditMode ? "Update" : "Submit"}</button>
         </div>
       </form>
     </div>
