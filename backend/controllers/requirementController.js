@@ -1,18 +1,25 @@
 const dbClient = require("../config/db");
 
+
 exports.getRequirements = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const offset = (page - 1) * limit;
+
   try {
-    let sql = `SELECT 
-                public."Requirement"."Id",
-    public."Items"."Name",
-     public."Items"."Description",
-      public."Requirement"."RequiredQuantity",
-      public."Requirement"."AchievedQuantity", 
-      public."Camp_Data"."District",
-      public."Requirement"."StatusId"
-               FROM public."Requirement" 
-               JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id" 
-               JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"`;
+    let sql = `
+      SELECT 
+        public."Requirement"."Id",
+        public."Items"."Name",
+        public."Items"."Description",
+        public."Requirement"."RequiredQuantity",
+        public."Requirement"."AchievedQuantity",
+        public."Camp_Data"."District",
+        public."Requirement"."StatusId"
+      FROM public."Requirement"
+      JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id"
+      JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"
+    `;
     const params = [];
 
     if (req.query.district || req.query.categories) {
@@ -31,13 +38,25 @@ exports.getRequirements = async (req, res) => {
         sql += `public."Requirement"."ItemId" = $${params.length}`;
       }
     }
-    sql += ` ORDER BY public."Requirement"."CreatedOn" DESC LIMIT 100`;
+
+    sql += ` ORDER BY public."Requirement"."CreatedOn" DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+    params.push(limit, offset);
+
 
     const result = await dbClient.query(sql, params);
-    res.json(result.rows);
+    const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Requirement"');
+    const totalItems = parseInt(totalResult.rows[0].count);
+
+    res.json({
+      page,
+      limit,
+      totalItems,
+      totalPages: Math.ceil(totalItems / limit),
+      data: result.rows
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to retrieve requirement" });
+    res.status(500).json({ error: "Failed to retrieve requirements" });
   }
 };
 
@@ -90,10 +109,10 @@ exports.updateRequirement = async (req, res) => {
       'UPDATE "Requirement" SET "ItemId" = $2, "CampId" = $3, "StatusId" = $4, "RequiredQuantity" = $5,  "AchievedQuantity" = $6  WHERE "Id" = $1',
       [Id, ItemId, CampId, StatusId, RequiredQuantity, AchievedQuantity]
     );
-    if (result.rows.length > 0) {
-      res.json(result.rows[0]);
+    if (result.rowCount > 0) {
+      res.json({ message: "Order updated successfully" }); 
     } else {
-      res.status(404).json({ message: "Requirement updated successfully" });
+      res.status(404).json({ message: "Requirement updation failed" });
     }
   } catch (error) {
     console.error(error);

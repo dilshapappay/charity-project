@@ -54,7 +54,7 @@ export default function AddOrderForm() {
             try {
                 const users = await getUsers();
                 console.log('Fetched users:', users);
-                setUsers(users);
+                setUsers(users.data);
             } catch (error) {
                 console.error('Error fetching users:', error);
             }
@@ -67,7 +67,7 @@ export default function AddOrderForm() {
             try {
                 const requirements = await getRequirements();
                 console.log('Fetched requirements:', requirements);
-                setRequirements(requirements);
+                setRequirements(requirements.data);
             } catch (error) {
                 console.error('Error fetching requirements:', error);
             }

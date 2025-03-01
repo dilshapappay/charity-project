@@ -1,0 +1,14 @@
+const Joi = require('joi');
+
+const updateOrderSchema = Joi.object({
+    Id: Joi.number().required(),
+    RequirementId: Joi.number().required(),
+    UserId: Joi.number().required(),
+    StatusId: Joi.number().required(),
+    Quantity: Joi.number().required(),
+    
+
+})
+
+
+exports.updateOrderSchema = updateOrderSchema;

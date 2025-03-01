@@ -42,7 +42,7 @@ export default function AddCampForm() {
                           console.error("Error fetching camp:", error);
                         }
                       };
-                      fetchCamps ();
+                      fetchCamps (); 
                     }
                   }, [id]);
 
@@ -52,7 +52,7 @@ export default function AddCampForm() {
             try {
                 const users = await getUsers();
                 console.log('Fetched users:', users);
-                setUsers(users);
+                setUsers(users.data);
             } catch (error) {
                 console.error('Error fetching users:', error);
             }

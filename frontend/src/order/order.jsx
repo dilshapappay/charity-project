@@ -91,7 +91,7 @@ import { useNavigate } from 'react-router-dom';
                             <td>{index + 1}</td>
                             <td>{`${order.FirstName} ${order.LastName}`}</td > 
                             <td>{order.ProductName}</td>
-                            <td>{order.Status}</td>
+                            <td>{order.StatusId}</td>
                             <td>{order.Quantity}</td>
                             <td>  <div className={styles.actionIcons}>
                                 <i className="material-icons" onClick={() => handleEditClick(order.Id)} >edit</i>

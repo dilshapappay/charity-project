@@ -75,8 +75,10 @@ exports.createUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const Password = crypto.randomBytes(8).toString('hex'); // Generates a 16-character random password
     const hash = await bcrypt.hash(Password, salt);
-    await dbClient.query('INSERT INTO public."User" ("Email", "Password") VALUES ($1, $2)', [Email, hash]);
-   
+    const newUser = await dbClient.query(
+      'INSERT INTO public."User" ("FirstName", "LastName", "Email", "Password", "RoleId", "Address", "Mobile") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [FirstName, LastName, Email, hash, RoleId, Address, Mobile]
+    );   
    
     sendPasswordEmail(Email, Password);
     res.json({ msg: 'User Registered' });
@@ -87,7 +89,7 @@ exports.createUser = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Failed to create user" });
   }
-};
+``};
 
 exports.updateUser = async (req, res) => {
   const { Id, FirstName, LastName, RoleId, Password,Email, Address, Mobile } =
@@ -97,10 +99,11 @@ exports.updateUser = async (req, res) => {
       'UPDATE "User"SET "FirstName" = $2, "LastName" = $3, "RoleId" = $4, "Password" = $5,  "Email" = $6, "Address" = $7, "Mobile" = $8 WHERE "Id" = $1',
       [Id, FirstName, LastName, RoleId, Password,Email, Address, Mobile]
     );
-    if (result.rows.length > 0) {
-      res.json(result.rows[0]);
+    if (result.rowCount > 0) {
+      res.json({ message: "Order updated successfully" }); 
+
     } else {
-      res.status(404).json({ message: "User updated successfully" });
+      res.status(404).json({ message: "User updation failed " });
     }
   } catch (error) {
     console.error(error);

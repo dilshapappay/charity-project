@@ -76,10 +76,10 @@ exports.updateVolunteer=async(req,res)=>{
       const result=await dbClient.query('UPDATE "Camp_Volunteers" SET "UserId" = $2, "CampId" = $3 WHERE "Id" = $1',
           [ Id, UserId,CampId]
       );
-      if (result.rows.length > 0) {
-          res.json(result.rows[0]); 
-      } else {
-          res.status(404).json({ message: 'Volunteer updated successfully' });
+      if (result.rowCount > 0) {
+        res.json({ message: "Order updated successfully" });    
+            } else {
+          res.status(404).json({ message: 'Volunteer updation Failed' });
       }
   } catch (error) {
     console.error(error);

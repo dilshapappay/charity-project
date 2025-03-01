@@ -63,7 +63,7 @@ export default function AddVolunteerForm() {
       try {
         const users = await getUsers();
         console.log("Fetched users:", users);
-        setUsers(users);
+        setUsers(users.data);
       } catch (error) {
         console.error("Error fetching users:", error);
       }

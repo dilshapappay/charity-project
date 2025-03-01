@@ -1,58 +1,34 @@
-const API_URL = process.env.REACT_APP_API_URL;
+import apiClient from './apiClient';
 
 export function getItems(page = 1, limit = 10){
-    return fetch(`${API_URL}/items?page=${page}&limit=${limit}`)
-    .then(response => response.json())
-    .then(data => data);
+  debugger
+    return apiClient(`/items?page=${page}&limit=${limit}`);
 }
 
 export function getItemById(id){
-  return fetch(`${API_URL}/items/${id}`, {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-}).then(response => response.json());
+  return apiClient(`/items/${id}`); 
 }
 export function createItems(item){
-    return fetch(`${API_URL}/items`, {
+    return apiClient(`/items`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(item),
-    })
-    .then(response => response.json())
-    .then(data => data);
+        body: item
+      });
 }
 
 
-export function updateItem(item){
-  debugger
-    return fetch(`${API_URL}/items`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(item),
-    })
-    .then(response => response.json())
-    .then(data => data);
+export function updateItem(item) {
+  return apiClient('/items', {
+    method: 'PUT',
+    body: item
+  });
 }
+
+
+
 
 export function deleteItem(Id) {
-    return fetch(`${API_URL}/items`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ Id }),
-    })
-      .then(async (response) => {
-        var result = await response.json();
-        if (!response.ok) {
-          throw new Error(result.message);
-        }
-        return result;
-      });
-  }
+  return apiClient(`/items`, {
+    method: 'DELETE',
+    body: { Id }
+  });
+}

@@ -1,8 +1,7 @@
-const API_URL = process.env.REACT_APP_API_URL;
+import apiClient from './apiClient';
 
 export function getRoles(){
-    return fetch(`${API_URL}/roles`)
-    .then(response => response.json())
-    .then(data => data);
+    return apiClient(`/roles`);
+
 }
      

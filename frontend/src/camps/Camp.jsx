@@ -78,10 +78,10 @@ return (
                            <th>Location Address</th>
                           <th>Actions</th>
                     </tr>
-                </thead>
+                </thead> 
                 <tbody>
                 {camps.map((camp, index) => (
-                    <tr key={camp._id}>
+                    <tr key={camp.id}>
                         <td>{index + 1}</td>
                         <td>
                             {`${camp.FirstName} ${camp.LastName}`}

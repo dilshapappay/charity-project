@@ -60,10 +60,10 @@ exports.createItems = async (req, res) => {
         const result=await dbClient.query('UPDATE "Items" SET "Name" = $2, "Description" = $3 WHERE "Id" = $1',
             [ Id,Name,Description]
         );
-        if (result.rows.length > 0) {
-            res.json(result.rows[0]); 
-        } else {
-            res.status(404).json({ message: 'Item updated successfully' });
+        if (result.rowCount > 0) {
+          res.json({ message: "Order updated successfully" }); 
+                } else {
+            res.status(404).json({ message: 'Item updation failed' });
         }
     } catch (error) {
       console.error( error);

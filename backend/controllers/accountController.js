@@ -1,49 +1,54 @@
-// filepath: /e:/dhilsha/charity project/backend/controllers/accountController.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const pool = require('../config/db');
 const jwtConfig = require('../config/jwt-config');
 const dbClient = require('../config/db');
 
-// Register Handle
 exports.register = async (req, res) => {
-  const { email, password, password2 } = req.body;
+  const { firstName, lastName, email, password, password2 } = req.body;
   let errors = [];
 
-  if ( !email || !password || !password2) {
+  if (!firstName || !lastName || !email || !password || !password2) {
     errors.push({ msg: 'Please enter all fields' });
   }
 
-  if (password != password2) {
+  if (password !== password2) {
     errors.push({ msg: 'Passwords do not match' });
   }
 
-  if (password?.length < 6) {
+  if (password.length < 6) {
     errors.push({ msg: 'Password must be at least 6 characters' });
   }
 
   if (errors.length > 0) {
     return res.status(400).json({ errors });
-  } else {
-    try {
-      const result = await dbClient.query('SELECT * FROM public."User" WHERE public."User"."Email" = $1', [email]);
-      if (result.rows.length > 0) {
-        errors.push({ msg: 'Email already exists' });
-        return res.status(400).json({ errors });
-      } else {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(password, salt);
-        await dbClient.query('INSERT INTO public."User" ("Email", "Password") VALUES ($1, $2)', [email, hash]);
-        res.json({ msg: 'You are now registered and can log in' });
-      }
-      dbClient.release();
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Server error');
+  }
+
+  try {
+  const result = await dbClient.query(
+      'SELECT * FROM public."User" WHERE public."User"."Email" = $1',
+      [email]
+    );
+
+    if (result.rows.length > 0) {
+      return res.status(400).json({ errors: [{ msg: 'Email already exists' }] });
     }
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+
+    await dbClient.query(
+      'INSERT INTO public."User" ("FirstName", "LastName", "Email", "Password") VALUES ($1, $2, $3, $4)',
+      [firstName, lastName, email, hash]
+    );
+
+    res.json({ msg: 'You are now registered and can log in' });
+  } catch (err) {
+    console.error('Database error:', err); 
+    res.status(500).json({ error: 'Something went wrong', details: err.message }); 
   }
 };
+
 
 // Login Handle
 exports.login = (req, res, next) => {

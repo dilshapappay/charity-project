@@ -1,0 +1,14 @@
+const Joi = require('joi');
+
+const updateRequirementSchema = Joi.object({
+    Id: Joi.number().required(),
+    ItemId: Joi.number().required(),
+    CampId: Joi.number().required(),
+    StatusId: Joi.number().required(),
+    RequiredQuantity: Joi.number().required(),
+    AchievedQuantity: Joi.number().required(),
+});
+
+
+
+exports.updateRequirementSchema = updateRequirementSchema;

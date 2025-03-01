@@ -77,11 +77,10 @@ exports.updateOrder=async(req,res)=>{
   try{
       const result=await dbClient.query('UPDATE "Orders" SET "RequirementId" = $2, "StatusId" = $3, "UserId" = $4,"Quantity" = $5  WHERE "Id" = $1',
           [Id ,RequirementId, StatusId, UserId, Quantity]
-      );
-      if (result.rows.length > 0) {
-          res.json(result.rows[0]); 
-      } else {
-          res.status(404).json({ message: 'Order updated successfully' });
+     );
+      if (result.rowCount > 0) {
+          } else {
+          res.status(404).json({ message: 'Order updation failed' });
       }
   } catch (error) {
     console.error(error);

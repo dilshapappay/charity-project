@@ -78,10 +78,10 @@ exports.getCamps = async (req, res) => {
         const result=await dbClient.query('UPDATE "Camp_Data" SET "CampAdminId" = $2, "Name" = $3, "Description" = $4, "District"=$5, "LocationAddress" = $6 WHERE "Id" = $1',
             [Id ,CampAdminId,Name,Description,District,LocationAddress]
         );
-        if (result.rows.length > 0) {
-            res.json(result.rows[0]); 
+        if (result.rowCount > 0) {
+          res.json({ message: "Camp updated successfully" });     
         } else {
-            res.status(404).json({ message: 'Camp updated successfully' });
+            res.status(404).json({ message: 'Camp updation failed' });
         }
     } catch (error) {
       console.error(error);

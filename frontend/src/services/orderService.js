@@ -1,62 +1,30 @@
+import apiClient from './apiClient';
 
-const API_URL = process.env.REACT_APP_API_URL;
-
-export function  getOrders(page = 1, limit = 10){
-    return fetch(`${API_URL}/Orders?page=${page}&limit=${limit}`)
-    .then(response => response.json())
-    .then(data => data);
+export function getOrders(page = 1, limit = 10) {
+  return apiClient(`/Orders?page=${page}&limit=${limit}`);
 }
 
-export function getOrderById(id){
-  return fetch(`${API_URL}/Orders/${id}`, {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-}).then(response => response.json());
+export function getOrderById(id) {
+  return apiClient(`/Orders/${id}`);
 }
 
-
-
-export function createOrder(order){
-  
-    return fetch(`${API_URL}/Orders`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(order),
-    })
-    .then(response => response.json())
-    .then(data => data);
+export function createOrder(order) {
+  return apiClient('/Orders', {
+    method: 'POST',
+    body: order
+  });
 }
 
-export function updateOrder(order){
-  
-    return fetch(`${API_URL}/Orders`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(order),
-    })
-    .then(response => response.json())
-    .then(data => data);
+export function updateOrder(order) {
+  return apiClient('/Orders', {
+    method: 'PUT',
+    body: order
+  });
 }
 
 export function deleteOrder(id) {
-    return fetch(`${API_URL}/Orders`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }),
-    })
-      .then(async (response) => {
-        var result = await response.json();
-        if (!response.ok) {
-          throw new Error(result.message);
-        }
-        return result;
-      });
-  }
+  return apiClient('/Order', {
+    method: 'DELETE',
+    body: { id }
+  });
+}

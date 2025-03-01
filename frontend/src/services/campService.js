@@ -1,62 +1,33 @@
-const API_URL = process.env.REACT_APP_API_URL;
+import apiClient from './apiClient';
 
 export function getCamps(page = 1, limit = 10){
-    return fetch(`${API_URL}/camps?page=${page}&limit=${limit}`)
-    .then(response => response.json())
-    .then(data => data);
+    return apiClient(`/camps?page=${page}&limit=${limit}`);
+ 
 }
 
 
-export function getCampById(id){
-  return fetch(`${API_URL}/camps/${id}`, {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-}).then(response => response.json());
+export function getCampById(id) {
+  return apiClient(`/camps/${id}`);
 }
 
-
-export function createCamp(camp){
-    return fetch(`${API_URL}/camps`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(camp),
-})
-
-
-    .then(response => response.json())
-    .then(data => data);
+export function createCamp(camp) {
+  return apiClient('/camps', {
+    method: 'POST',
+    body: camp
+  });
 }
 
-export function updateCamp(camp){
-  debugger
-    return fetch(`${API_URL}/camps`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(camp),
-    })
-    .then(response => response.json())
-    .then(data => data);
+export function updateCamp(camp) {
+  return apiClient('/camps' , {
+    method: 'PUT',
+    body: camp
+  });
 }
 
 export function deleteCamp(id) {
-    return fetch(`${API_URL}/camps`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }),
-    })
-      .then(async (response) => {
-        var result = await response.json();
-        if (!response.ok) {
-          throw new Error(result.message);
-        }
-        return result;
-      });
-  }
+  return apiClient(`/camps`, {
+    method: 'DELETE',
+    body: { id }
+  });
+}
+

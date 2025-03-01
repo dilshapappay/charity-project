@@ -1,0 +1,11 @@
+const Joi = require('joi');
+
+const updateVolunteerSchema = Joi.object({
+    Id: Joi.number().required(),
+    UserId: Joi.number().required(),
+    CampId: Joi.number().required(),
+
+});
+
+
+exports.updateVolunteerSchema = updateVolunteerSchema;

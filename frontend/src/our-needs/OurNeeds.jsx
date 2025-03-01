@@ -13,20 +13,19 @@ export default function OurNeeds() {
 
     const setItems = async function () {
         const items = await getItems();
-        setCategories(items)
+        setCategories(items.data)
     }
 
     const handleSearch = async function () {
-        const requirements = await getRequirements({ district: selectedDistrict, categories: selectedCategory });
-        
-        if(requirements.length === 0)
+        const requirements = await getRequirements(selectedDistrict,selectedCategory);
+          if(requirements.length === 0)
         {
             setRequirements([])
-            return;
+            return; 
         }    
 
         // Group the requirements by Name
-        const groupedRequirements = requirements.reduce((acc, requirement) => {
+        const groupedRequirements = requirements.data.reduce((acc, requirement) => {
             const { District } = requirement;
             if (!acc[District]) {
                 acc[District] = [];

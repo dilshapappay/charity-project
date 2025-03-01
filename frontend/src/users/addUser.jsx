@@ -42,7 +42,7 @@ useEffect(() => {
       const fetchUser = async function () {
         try {
           const user = await getUserById(id);
-          console.log("Fetched user:", user);
+          console.log("Fetched user:", user );
           setUser({
             Id:id,
             FirstName:user.FirstName,

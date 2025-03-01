@@ -15,7 +15,7 @@ export default function Welcome() {
                     <p class="author">— Mahatma Gandhi</p>
                 </div>
                 <div class="buttons">
-                <Link to="/main">
+                <Link to="/login">
                 <button class="donate-btn">Donate</button>
                 </Link> 
                     <Link to="/our-needs">
@@ -38,10 +38,10 @@ export default function Welcome() {
                 <nav>
 
                     <ul id="nav-links">
-                        <li><a href="#">Home</a></li>
+                        <li><a href="">Home</a></li>
                         <li><a href="#">About Us</a></li>
                         <li><a href="#">Contact</a></li>
-                        <li><a href="#">Donate</a></li>
+                        <li><a href="/login">Donate</a></li>
                     </ul>
                 </nav>
                 <div class="image-container">

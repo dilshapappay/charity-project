@@ -1,0 +1,14 @@
+const Joi = require('joi');
+
+const updateCampSchema = Joi.object({
+    Id:Joi.number().required(),
+    CampAdminId: Joi.number().required(),
+    Name: Joi.string().required(),
+    Description: Joi.string().required(),
+    LocationAddress: Joi.string().required(),
+    District: Joi.string().required(),
+
+});
+
+
+exports.updateCampSchema = updateCampSchema;
