@@ -38,7 +38,7 @@ exports.register = async (req, res) => {
     const hash = await bcrypt.hash(password, salt);
 
     await dbClient.query(
-      'INSERT INTO public."User" ("FirstName", "LastName", "Email", "Password") VALUES ($1, $2, $3, $4)',
+      'INSERT INTO public."User" ("FirstName", "LastName", "Email", "Password",RoleId) VALUES ($1, $2, $3, $4,3)',
       [firstName, lastName, email, hash]
     );
 

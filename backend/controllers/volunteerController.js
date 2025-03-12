@@ -60,9 +60,9 @@ exports.createVolunteer = async (req, res) => {
 
   try {
     const result = await dbClient.query(
-      `INSERT INTO "Camp_Volunteers"("UserId","CampId")
-	VALUES ($1, $2)`,
-      [ UserId, CampId]
+      `INSERT INTO "Camp_Volunteers"("UserId","CampId","CreatedOn")
+	VALUES ($1, $2,$3)`,
+      [ UserId, CampId,new Date().toDateString()] 
     );
     res.status(201).json({ message: 'Volunteer added successfully', user: result.rows[0] });
   } catch (error) {
@@ -73,8 +73,8 @@ exports.createVolunteer = async (req, res) => {
 exports.updateVolunteer=async(req,res)=>{
   const { Id, UserId,CampId} = req.body; 
   try{
-      const result=await dbClient.query('UPDATE "Camp_Volunteers" SET "UserId" = $2, "CampId" = $3 WHERE "Id" = $1',
-          [ Id, UserId,CampId]
+      const result=await dbClient.query('UPDATE "Camp_Volunteers" SET "UserId" = $2, "CampId" = $3, "UpdatedOn"=$4 WHERE "Id" = $1',
+          [ Id, UserId,CampId,new Date().toDateString()]
       );
       if (result.rowCount > 0) {
         res.json({ message: "Order updated successfully" });    
@@ -91,7 +91,7 @@ exports.deleteVolunteer = async (req, res) => {
   const { id } = req.body;
   try {
     const result = await dbClient.query(
-      `DELETE FROM public."Camp_Volunteers" WHERE "Id" = $1`,
+      `UPDATE public."Camp_Volunteers" SET "IsDeleted" = true WHERE "Id" = $1 RETURNING *`,
       [id]
     );
     res.status(201).json({ message: 'volunteer deleted successfully', user: result.rows[0] });

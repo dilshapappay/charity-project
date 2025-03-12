@@ -9,16 +9,17 @@ exports.getRequirements = async (req, res) => {
   try {
     let sql = `
       SELECT 
-        public."Requirement"."Id",
-        public."Items"."Name",
-        public."Items"."Description",
-        public."Requirement"."RequiredQuantity",
-        public."Requirement"."AchievedQuantity",
-        public."Camp_Data"."District",
-        public."Requirement"."StatusId"
+      public."Requirement"."Id",
+      public."Items"."Name",
+      public."Items"."Description",
+      public."Requirement"."RequiredQuantity",
+      public."Requirement"."AchievedQuantity",
+      public."Camp_Data"."District",
+      public."Requirement"."StatusId"
       FROM public."Requirement"
       JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id"
       JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"
+      WHERE public."Requirement"."IsDeleted" = false
     `;
     const params = [];
 
@@ -124,7 +125,7 @@ exports.deleteRequirement = async (req, res) => {
   const { id } = req.body;
   try {
     const result = await dbClient.query(
-      `DELETE FROM public."Requirement" WHERE "Id" = $1`,
+      `UPDATE  public."Requirement" SET "IsDeleted"=true WHERE "Id" = $1`,
       [id]
     );
     res

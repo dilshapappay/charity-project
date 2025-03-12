@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './order.module.css';
 import { getOrders,deleteOrder } from "../services/orderService";
-import AddOrderForm from './addOrder';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -12,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
     const [page, setPage] = useState(1);
     const limit = 10;
     const [totalPages, setTotalPages] = useState(1);
-   const [showForm, setShowForm] = useState(false);
    const navigate = useNavigate();
 
 
@@ -31,9 +29,6 @@ import { useNavigate } from 'react-router-dom';
         fetchOrders(page, limit);
     }, [page, limit]);
 
-    const handleAddClick = () => {
-        setShowForm(true);
-    }
      const handleDeleteClick = async (Id) => {
         if (window.confirm("Are you sure you want to delete this order?")) {
           try {
@@ -69,10 +64,7 @@ import { useNavigate } from 'react-router-dom';
     return (
         <div className={styles.tableContainer}>
             <h2>Order Details</h2>
-            <Link to="/main/addOrder">
-                <button className={styles.addButton} onClick={handleAddClick} >+Add</button>
-                            {showForm && <AddOrderForm />}
-            </Link>
+            
             
             <table>
                 <thead>

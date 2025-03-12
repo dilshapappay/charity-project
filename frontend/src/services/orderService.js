@@ -23,7 +23,7 @@ export function updateOrder(order) {
 }
 
 export function deleteOrder(id) {
-  return apiClient('/Order', {
+  return apiClient('/Orders', {
     method: 'DELETE',
     body: { id }
   });

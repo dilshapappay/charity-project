@@ -24,30 +24,33 @@ export default function AddOrderForm() {
     const [requirements, setRequirements] = useState([]);
       const [isEditMode, setIsEditMode] = useState(false);
     
-
       useEffect(() => {
-          console.log("Order ID:", id);
-          if (id) {
+        console.log("Order ID:", id);
+        if (id) {
             setIsEditMode(true);
             const fetchOrder = async function () {
-              try {
-                const order = await getOrderById(id);
-                console.log("Fetched volunteer:", order);
-                setFormData({
-                  Id:id,
-                 UserId:order.UserId,
-                  RequirementId: order.RequirementId,
-                   StatusId: order.StatusId,
-                  Quantity: order.Quantity,
-                });
-              } catch (error) {
-                console.error("Error fetching order:", error);
-              }
+                try {
+                    const order = await getOrderById(id);
+                    const users = await getUsers(); 
+                    const user = users.data.find(u => u.Id === order.UserId); 
+                    
+                    const requirements = await getRequirements();
+                    const requirement = requirements.data.find(r => r.Id === order.RequirementId);
+                    setFormData({
+                        Id: id,
+                        UserId: user ? `${user.FirstName} ${user.LastName}` : "",
+                        RequirementId: requirement ? requirement.Name : "",                       
+                         StatusId: order.StatusId,
+                        Quantity: order.Quantity,
+                    });
+                } catch (error) {
+                    console.error("Error fetching order:", error);
+                }
             };
             fetchOrder();
-          }
-        }, [id]);
-
+        }
+    }, [id]);
+  
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -111,28 +114,15 @@ export default function AddOrderForm() {
 
     return (
         <div className={styles.formContainer}>
-  <h2>{isEditMode ? "Update Order" : "Add Order"}</h2>            <form onSubmit={handleSubmit}>
+            <h2>{isEditMode ? "Update Order" : "Add Order"}</h2>
+            <form onSubmit={handleSubmit}>
                 <div className={styles.formGroup}>
                     <label htmlFor="UserId">Customer Name</label>
-                    <select name="UserId" value={formData.UserId} onChange={handleChange}>
-                        <option value="">Select User</option>
-                        {users.map((user) => (
-                            <option key={user.Id} value={user.Id}>
-                                {`${user.FirstName} ${user.LastName}`}
-                            </option>
-                        ))}
-                    </select>
+                    <input type="text" name="UserId" value={formData.UserId} onChange={handleChange} readOnly/>
                 </div>
                 <div className={styles.formGroup}>
                     <label htmlFor="RequirementId">Product Name</label>
-                    <select name="RequirementId" value={formData.RequirementId} onChange={handleChange}>
-                        <option value="">Select Requirement</option>
-                        {requirements.map((requirement) => (
-                            <option key={requirement.Id} value={requirement.Id}>
-                                {requirement.Name}
-                            </option>
-                        ))}
-                    </select>
+                    <input type="text" name="RequirementId" value={formData.RequirementId} onChange={handleChange} readOnly/>
                 </div>
                 <div className={styles.formGroup}>
                     <label htmlFor="StatusId">Status</label>
@@ -140,7 +130,7 @@ export default function AddOrderForm() {
                 </div>
                 <div className={styles.formGroup}>
                     <label htmlFor="Quantity">Quantity</label>
-                    <input type="text" name="Quantity" value={formData.Quantity} onChange={handleChange} />
+                    <input type="text" name="Quantity" value={formData.Quantity} onChange={handleChange} readOnly />
                 </div>
                 <div className={styles.buttonGroup}>
                     <button type="button" onClick={handleReset}>

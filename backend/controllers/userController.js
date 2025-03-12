@@ -21,7 +21,7 @@ exports.getUsers = async (req, res) => {
    public."User"."Password"
 FROM 
   public."User" 
-JOIN 
+LEFT JOIN 
   public."Role"  
 ON 
   public."User"."RoleId" = public."Role"."id" LIMIT $1 OFFSET $2`, [limit, offset])
@@ -76,8 +76,8 @@ exports.createUser = async (req, res) => {
     const Password = crypto.randomBytes(8).toString('hex'); // Generates a 16-character random password
     const hash = await bcrypt.hash(Password, salt);
     const newUser = await dbClient.query(
-      'INSERT INTO public."User" ("FirstName", "LastName", "Email", "Password", "RoleId", "Address", "Mobile") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [FirstName, LastName, Email, hash, RoleId, Address, Mobile]
+      'INSERT INTO public."User" ("FirstName", "LastName", "Email", "Password", "RoleId", "Address", "Mobile", "CreatedOn") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+      [FirstName, LastName, Email, hash, RoleId, Address, Mobile, new Date().toDateString()]
     );   
    
     sendPasswordEmail(Email, Password);
@@ -96,8 +96,8 @@ exports.updateUser = async (req, res) => {
     req.body;
   try {
     const result = await dbClient.query(
-      'UPDATE "User"SET "FirstName" = $2, "LastName" = $3, "RoleId" = $4, "Password" = $5,  "Email" = $6, "Address" = $7, "Mobile" = $8 WHERE "Id" = $1',
-      [Id, FirstName, LastName, RoleId, Password,Email, Address, Mobile]
+      'UPDATE "User" SET "FirstName" = $2, "LastName" = $3, "RoleId" = $4, "Password" = $5, "Email" = $6, "Address" = $7, "Mobile" = $8, "UpdatedOn" = $9 WHERE "Id" = $1',
+      [Id, FirstName, LastName, RoleId, Password, Email, Address, Mobile, new Date().toDateString()]
     );
     if (result.rowCount > 0) {
       res.json({ message: "Order updated successfully" }); 
@@ -126,7 +126,7 @@ exports.deleteUser = async (req, res) => {
 
     // Proceed to delete the user
     const deleteResult = await dbClient.query(
-      'DELETE FROM public."User" WHERE "Id" = $1 RETURNING *',
+      'UPDATE public."User" SET "IsDeleted" = true WHERE "Id" = $1 RETURNING *',
       [id]
     );
 

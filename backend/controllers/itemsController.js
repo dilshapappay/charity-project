@@ -5,7 +5,7 @@ exports.getItems = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10; 
   const offset = (page - 1) * limit;
   try {
-    const result = await dbClient.query(`SELECT * FROM public."Items"LIMIT $1 OFFSET $2`, [limit, offset]);
+    const result = await dbClient.query(`SELECT * FROM public."Items" WHERE "IsDeleted" = false LIMIT $1 OFFSET $2`, [limit, offset]);
     const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Items"');
     const totalItems = parseInt(totalResult.rows[0].count);
     res.json({
@@ -43,9 +43,9 @@ exports.createItems = async (req, res) => {
   
     try {
       const result = await dbClient.query(
-        `INSERT INTO public."Items"("Name", "Description")
-      VALUES ($1, $2)`,
-        [Name,Description]
+        `INSERT INTO public."Items"("Name", "Description","CreatedOn")
+      VALUES ($1, $2,$3) RETURNING *`,
+        [Name,Description,new Date().toDateString()]
       );
       res.status(201).json({ message: 'Item inserted successfully', user: result.rows[0] });
     } catch (error) {
@@ -57,8 +57,8 @@ exports.createItems = async (req, res) => {
   exports.updateItem=async(req,res)=>{
     const { Id,Name,Description } = req.body; 
     try{
-        const result=await dbClient.query('UPDATE "Items" SET "Name" = $2, "Description" = $3 WHERE "Id" = $1',
-            [ Id,Name,Description]
+        const result=await dbClient.query('UPDATE "Items" SET "Name" = $2, "Description" = $3, "UpdatedOn"=$4 WHERE "Id" = $1',
+            [ Id,Name,Description,new Date().toDateString()]
         );
         if (result.rowCount > 0) {
           res.json({ message: "Order updated successfully" }); 
@@ -74,7 +74,7 @@ exports.createItems = async (req, res) => {
     const { Id } = req.body;
     try {
       const result = await dbClient.query(
-        `DELETE FROM public."Items" WHERE "Id" = $1`,
+        `UPDATE public."Items" SET "IsDeleted"=true WHERE "Id" = $1`,
         [Id]
       );
       res.status(201).json({ message: 'Item deleted successfully', user: result.rows[0] });

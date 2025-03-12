@@ -17,8 +17,9 @@ exports.getOrders = async (req, res) => {
         public."Orders"
       LEFT JOIN 
         public."User" ON public."Orders"."UserId" = public."User"."Id"
-      JOIN 
-        public."Items" ON public."Orders"."RequirementId" = public."Items"."Id"
+     LEFT JOIN 
+              public."Requirement" ON public."Orders"."RequirementId" = public."Requirement"."Id"
+LEFT JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id" WHERE public."Orders"."IsDeleted" = false
       LIMIT $1 OFFSET $2`, [limit, offset]);
 
     const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Orders"');
@@ -61,9 +62,9 @@ exports.createOrder = async (req, res) => {
 
   try {
     const result = await dbClient.query(
-      `INSERT INTO public."Orders"( "UserId","RequirementId", "StatusId","Quantity")
+      `INSERT INTO public."Orders"( "UserId","RequirementId", "StatusId","Quantity","CreatedOn")
     VALUES ($1, $2, $3, $4)`,
-      [UserId,RequirementId, StatusId,Quantity]
+      [UserId,RequirementId, StatusId,Quantity, new Date().toDateString()]
     );
     res.status(201).json({ message: 'Order inserted successfully', user: result.rows[0] });
   } catch (error) {
@@ -75,8 +76,8 @@ exports.createOrder = async (req, res) => {
 exports.updateOrder=async(req,res)=>{
   const { Id,RequirementId, StatusId, UserId,Quantity} = req.body; 
   try{
-      const result=await dbClient.query('UPDATE "Orders" SET "RequirementId" = $2, "StatusId" = $3, "UserId" = $4,"Quantity" = $5  WHERE "Id" = $1',
-          [Id ,RequirementId, StatusId, UserId, Quantity]
+      const result=await dbClient.query('UPDATE "Orders" SET "RequirementId" = $2, "StatusId" = $3, "UserId" = $4,"Quantity" = $5 , "UpdatedOn"=$6 WHERE "Id" = $1',
+          [Id ,RequirementId, StatusId, UserId, Quantity, new Date().toDateString()]
      );
       if (result.rowCount > 0) {
           } else {

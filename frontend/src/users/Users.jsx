@@ -74,7 +74,6 @@ const handlePreviousPage = () => {
             <th>Sl</th>
             <th>Name</th>
             <th>Email</th>
-            <th>Password</th>
             <th>Role</th>
             <th>Address</th>
             <th>Action</th>
@@ -86,7 +85,7 @@ const handlePreviousPage = () => {
               <td>{index + 1}</td>
               <td>{`${user.FirstName} ${user.LastName}`}</td>
               <td>{user.Email}</td>
-              <td>{user.Password}</td>
+            
               <td>{user.RoleName}</td>
               <td>{user.Address}</td>
               <td>

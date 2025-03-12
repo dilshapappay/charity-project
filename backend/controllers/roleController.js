@@ -2,7 +2,7 @@ const dbClient = require('../config/db');
 
 exports.getRoles = async (req, res) => {
   try {
-    const result = await dbClient.query('SELECT * FROM public."Role"');
+    const result = await dbClient.query('SELECT * FROM public."Role" WHERE "IsDeleted" = false');
     res.json(result.rows);
   } catch (error) {
     console.error(error);
@@ -32,9 +32,9 @@ exports.createRoles = async (req, res) => {
 
   try {
     const result = await dbClient.query(
-      `INSERT INTO public."Role"("RoleName")
-	VALUES ($1)`,  
-      [RoleName]
+      `INSERT INTO public."Role"("RoleName","CreatedOn")
+	VALUES ($1,$2) RETURNING *`,  
+      [RoleName,new Date().toDateString()]
     );
     res.status(201).json({ message: 'Role added successfully', user: result.rows[0] });
   } catch (error) {
@@ -49,8 +49,7 @@ exports.deleteRoles = async (req, res) => {
   const { id } = req.params;
   try {
     const result = await dbClient.query(
-      `DELETE FROM public."Role"
-      WHERE "id" = $1`,
+     `UPDATE public."Role" SET "IsDeleted" = true WHERE "Id" = $1 RETURNING *`,
       [id]
     );
     if (result.rowCount > 0) {
