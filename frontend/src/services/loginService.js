@@ -9,7 +9,7 @@ export async function login(email, password) {
 }
 
 export async function register(firstName, lastName, email, password) {
-  return apiClient('/account/register', {
+  return apiClient('/account/Register', {
     method: 'POST',
     body: { firstName, lastName, email, password, password2: password },
     includeToken: false

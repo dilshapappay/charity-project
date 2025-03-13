@@ -1,6 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Welcome from "./welcome/Welcome";
+import AboutUs from './aboutus/AboutUs';
+import ContactUs from "./Contact/Contact";
 import OurNeeds from "./our-needs/OurNeeds";
 import Login from "./Login/login";
 import Main from "./main/main";
@@ -26,6 +28,9 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route exact path="/" element={<Welcome />} />
+            <Route path="/aboutus" element={<AboutUs />} />
+            <Route path="/contact" element={<ContactUs />} />
+
             <Route exact path="/our-needs" element={<OurNeeds />} />
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/Signup" element={<Login />} />

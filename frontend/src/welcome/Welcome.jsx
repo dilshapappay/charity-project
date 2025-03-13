@@ -39,8 +39,8 @@ export default function Welcome() {
 
                     <ul id="nav-links">
                         <li><a href="/">Home</a></li>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="/aboutus">About Us</a></li>
+                        <li><a href="/contact">Contact</a></li>
                         <li><a href="/login">Donate</a></li>
                     </ul>
                 </nav>

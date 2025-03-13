@@ -11,25 +11,11 @@ export default function OurNeeds() {
     const [selectedDistrict, setSelectedDistrict] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
 
-    const fetchAllItems = async () => {
-        let allItems = [];
-        let page = 1;
-        const limit = 10;
-        let hasMoreItems = true;
-    
-        while (hasMoreItems) {
-          const response = await getItems(page, limit);
-          const items = response.data;
-          allItems = [...allItems, ...items];
-          if (items.length < limit) {
-            hasMoreItems = false;
-          } else {
-            page++;
-          }
-        }
-    
-        setCategories(allItems);
-      };
+    const setItems = async function () {
+        const items = await getItems();
+        setCategories(items.data)
+    }
+
     const handleSearch = async function () {
         const requirements = await getRequirements(selectedDistrict,selectedCategory);
           if(requirements.length === 0)
@@ -51,7 +37,7 @@ export default function OurNeeds() {
     };
 
     useEffect(() => {
-        fetchAllItems();
+        setItems();
         handleSearch();
     }, []);
 

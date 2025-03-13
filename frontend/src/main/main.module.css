@@ -101,7 +101,8 @@
 }
 
 .mainContent {
-  margin-left: 200px; 
+  margin-top:20px;
+  margin-left: 220px; 
   flex-grow: 1;
   padding: 20px;
   height: calc(100vh - 60px); 
