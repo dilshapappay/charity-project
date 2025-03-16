@@ -4,7 +4,7 @@ import { getItems } from '../services/itemService';
 import { getRequirements } from '../services/requirementService';
 import districts from '../utils/districts';
 import { capitalizeFirstLetter } from '../utils/util';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
 export default function OurNeeds() {
     const [categories, setCategories] = useState([]);
@@ -19,29 +19,29 @@ export default function OurNeeds() {
         let page = 1;
         const limit = 10;
         let hasMoreItems = true;
-    
+
         while (hasMoreItems) {
-          const response = await getItems(page, limit);
-          const items = response.data;
-          allItems = [...allItems, ...items];
-          if (items.length < limit) {
-            hasMoreItems = false;
-          } else {
-            page++;
-          }
+            const response = await getItems(page, limit);
+            const items = response.data;
+            allItems = [...allItems, ...items];
+            if (items.length < limit) {
+                hasMoreItems = false;
+            } else {
+                page++;
+            }
         }
-    
+
         setCategories(allItems);
-      };
- 
+    };
+
 
     const handleSearch = async function () {
-        const requirements = await getRequirements(selectedDistrict,selectedCategory);
-          if(requirements.length === 0)
-        {
+        debugger
+        const requirements = await getRequirements(selectedDistrict, selectedCategory);
+        if (requirements.data.length === 0) {
             setRequirements([])
-            return; 
-        }    
+            return;
+        }
 
         // Group the requirements by Name
         const groupedRequirements = requirements.data.reduce((acc, requirement) => {
@@ -86,7 +86,11 @@ export default function OurNeeds() {
                     <i className="fas fa-search"></i>
                     <input type="text" placeholder="Search" />
                 </div>
-                <button>Login</button>
+                <Link to="/login">
+                    <button>
+                        Login
+                    </button>
+                </Link>
             </div>
             <div className={styles.filters}>
                 <select value={selectedDistrict} onChange={handleDistrictChange}>
@@ -107,7 +111,12 @@ export default function OurNeeds() {
                 <button className={styles.button} onClick={handleSearch}>Search</button>
             </div>
             <div>
-                {Object.keys(requirements).map((district) => (
+                {requirements.length == 0 && (
+                    <div className='no-data-table'>
+                        No Requirements found !!!
+                    </div>
+                )}
+                {requirements.length > 0 && Object.keys(requirements).map((district) => (
                     <div key={district}>
                         <div className={styles.sectionTitle}><h3>{capitalizeFirstLetter(district)}</h3></div>
                         <div className={styles.cardContainer}>

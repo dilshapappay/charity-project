@@ -17,7 +17,7 @@ import AddCampForm from "./camps/addCamp";
 import Volunteers from "./volunteers/volunteers";
 import AddVolunteerForm from "./volunteers/addVolunteer";
 import Orders from "./order/order";
-import UpdateOrderForm from "./order/updateOrder";
+import Dashboard from "./dashboard/Dashboard";
 import { AuthProvider } from "./Auth/AuthContext";
 import ProtectedRoute
  from "./Auth/ProtectedRoute";
@@ -39,6 +39,8 @@ function App() {
 
             <Route element={<ProtectedRoute/>}>
               <Route path="/main" element={<Main/>}>
+              <Route path="" element={<Dashboard />} />
+              <Route path="dashboard" element={<Dashboard />} />
               <Route path="users" element={<Users />} />
               <Route path="addUser" element={<AddUserForm />} />
               <Route path="editUser/:id" element={<AddUserForm />} />

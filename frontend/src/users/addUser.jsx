@@ -3,7 +3,7 @@ import { createUsers, getUserById, updateUser } from '../services/userService';
 import styles from './addUser.module.css';
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import Role from '../enums/Role.js';
+import {Role} from '../enums/Role.js';
 
 export default function AddUserForm() {
   const navigate = useNavigate();

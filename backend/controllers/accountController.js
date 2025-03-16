@@ -5,10 +5,10 @@ const jwtConfig = require('../config/jwt-config');
 const dbClient = require('../config/db');
 
 exports.register = async (req, res) => {
-  const { firstName, lastName, email, password, password2,RoleId } = req.irbody;
+  const { firstName, lastName, email, password, password2,RoleId } = req.body;
   let errors = [];
 
-  if (!firstName || !lastName || !email || !password || !password2 || RoleId) {
+  if (!firstName || !lastName || !email || !password || !password2 || !RoleId) {
     errors.push({ msg: 'Please enter all fields' });
   }
 
@@ -38,8 +38,8 @@ exports.register = async (req, res) => {
     const hash = await bcrypt.hash(password, salt);
 
     await dbClient.query(
-      'INSERT INTO public."User" ("FirstName", "LastName", "Email", "Password","RoleId") VALUES ($1, $2, $3, $4,3)',
-      [firstName, lastName, email,RoleId, hash]
+      'INSERT INTO public."User" ("FirstName", "LastName", "Email", "Password","RoleId") VALUES ($1, $2, $3, $4,$5)',
+      [firstName, lastName, email, hash,RoleId]
     );
 
     res.json({ msg: 'You are now registered and can log in' });

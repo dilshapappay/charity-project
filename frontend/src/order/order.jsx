@@ -77,7 +77,7 @@ export default function Orders() {
           </tr>
         </thead>
         <tbody>
-          {orders.map((order, index) => (
+          {orders.length > 0 && orders.map((order, index) => (
             <tr key={order.Id}>
               <td>{index + 1}</td>
               <td>{`${order.FirstName} ${order.LastName}`}</td >
@@ -90,6 +90,7 @@ export default function Orders() {
               </div></td>
             </tr>
           ))}
+          {orders.length==0 &&(<tr><td colSpan={6} className='no-data-table'>No data found!!!</td></tr>)}
         </tbody>
       </table>
       <div className={styles.pagination}>

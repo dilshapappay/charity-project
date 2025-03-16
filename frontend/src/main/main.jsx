@@ -1,7 +1,7 @@
 import { Outlet, Link } from 'react-router-dom';
 import { useState } from 'react';
 import styles from './main.module.css';
-import Role from '../enums/Role';
+import {Role} from '../enums/Role';
 
 function Main() {
   const userRole = parseInt(localStorage.getItem('role'), 10);
@@ -39,6 +39,7 @@ function Main() {
         <aside className={styles.sidebar}>
           <nav>
             <ul>
+              <li><Link to="/main/dashboard">Dashboard</Link></li>
               {
                 userRole === Role["Normal User"] && (
                   <>

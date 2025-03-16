@@ -5,4 +5,13 @@ const Role = Object.freeze({
   "Volunteer": 4
 });
 
-  module.exports = Role;
+const getRoleName = (roleId) => {
+  for (const [key, value] of Object.entries(Role)) {
+    if (value === roleId) {
+      return key;
+    }
+  }
+  return 'Unknown Role';
+};
+
+module.exports = { Role, getRoleName };

@@ -34,3 +34,8 @@
     transform: rotate(360deg);
   }
 }
+
+.no-data-table{
+  text-align: center;
+  color: red;
+}

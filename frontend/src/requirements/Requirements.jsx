@@ -18,7 +18,7 @@ export default function Requirements() {
   const navigate = useNavigate();
 
   const fetchRequirements = async () => {
-    const response = await getRequirements("","",page,limit);
+    const response = await getRequirements("", "", page, limit);
     console.log(response);
     setRequirements(response.data);
     setTotalPages(response.totalPages);
@@ -82,7 +82,13 @@ export default function Requirements() {
           </tr>
         </thead>
         <tbody>
-          {requirements.map((requirement, index) => (
+          {requirements.length == 0 && (
+            <tr>
+              <td colSpan={8} className='no-data-table'>No data found!!!</td>
+            </tr>
+          )}
+
+          {requirements.length > 0 && requirements.map((requirement, index) => (
             <tr key={requirement.id}>
               <td>{index + 1}</td>
               <td>{requirement.Name}</td>
