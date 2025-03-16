@@ -32,8 +32,8 @@ exports.createRoles = async (req, res) => {
 
   try {
     const result = await dbClient.query(
-      `INSERT INTO public."Role"("RoleName","CreatedOn")
-	VALUES ($1,$2) RETURNING *`,  
+      `INSERT INTO public."Role"("RoleName","CreatedOn","IsDeleted")
+	VALUES ($1,$2,false) RETURNING *`,  
       [RoleName,new Date().toDateString()]
     );
     res.status(201).json({ message: 'Role added successfully', user: result.rows[0] });

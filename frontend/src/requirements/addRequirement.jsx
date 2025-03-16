@@ -6,13 +6,13 @@ import { getCamps } from '../services/campService';
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
+
 export default function AddRequirementForm() {
      const navigate = useNavigate();
       const { id } = useParams();
     const [requirement,setRequirement] = useState({
         ItemId : '',
         CampId : '',
-        StatusId: '',
         RequiredQuantity: '',
         AchievedQuantity: ''
 
@@ -104,7 +104,6 @@ export default function AddRequirementForm() {
             setRequirement({
                 ItemId : '',
                 CampId : '',
-                StatusId: '',
                 RequiredQuantity: '',
                 AchievedQuantity: ''
             });
@@ -143,15 +142,7 @@ export default function AddRequirementForm() {
             ))}
           </select>
             </div>
-            <div className={styles.formGroup}>
-            <label>Status Id</label>
-            <input
-                type="text"
-                name="StatusId"
-                value={requirement.StatusId}
-                onChange={handleChange}
-            />
-            </div>
+          
             <div className={styles.formGroup}>
             <label>Required Quantity</label>
             <input

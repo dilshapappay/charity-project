@@ -43,8 +43,8 @@ exports.createItems = async (req, res) => {
   
     try {
       const result = await dbClient.query(
-        `INSERT INTO public."Items"("Name", "Description","CreatedOn")
-      VALUES ($1, $2,$3) RETURNING *`,
+        `INSERT INTO public."Items"("Name", "Description","CreatedOn","IsDeleted")
+      VALUES ($1, $2,$3,false) RETURNING *`,
         [Name,Description,new Date().toDateString()]
       );
       res.status(201).json({ message: 'Item inserted successfully', user: result.rows[0] });

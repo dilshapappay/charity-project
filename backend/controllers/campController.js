@@ -62,8 +62,8 @@ exports.getCamps = async (req, res) => {
   
     try {
       const result = await dbClient.query(
-        `INSERT INTO public."Camp_Data"("CampAdminId","Name","Description","LocationAddress","District","CreatedOn")
-      VALUES ($1, $2,$3,$4,$5,$6) RETURNING *`,
+        `INSERT INTO public."Camp_Data"("CampAdminId","Name","Description","LocationAddress","District","CreatedOn","IsDeleted")
+      VALUES ($1, $2,$3,$4,$5,$6,false) RETURNING *`,
       [CampAdminId,Name,Description,LocationAddress,District,new Date().toDateString()]
       );
       res.status(201).json({ message: 'Camp inserted successfully', user: result.rows[0] });

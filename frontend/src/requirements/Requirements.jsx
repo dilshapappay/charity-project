@@ -7,6 +7,7 @@ import styles from "./Requirement.module.css";
 import { Link } from "react-router-dom";
 import AddRequirementForm from "./addRequirement";
 import { useNavigate } from "react-router-dom";
+import OrderStatus from "../orderStatus";
 
 export default function Requirements() {
   const [requirements, setRequirements] = useState([]);
@@ -88,7 +89,7 @@ export default function Requirements() {
               <td>{requirement.Name}</td>
               <td>{requirement.Description}</td>
               <td>{requirement.District}</td>
-              <td>{requirement.StatusId}</td>
+              <td>{OrderStatus[Number(requirement.StatusId)]}</td>
               <td>{requirement.RequiredQuantity}</td>
               <td>{requirement.AchievedQuantity}</td>
 

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import styles from './order.module.css';
 import { getOrders,deleteOrder } from "../services/orderService";
 import { useNavigate } from 'react-router-dom';
+import OrderStatus from "../orderStatus";
+
 
 
 
@@ -43,7 +44,7 @@ import { useNavigate } from 'react-router-dom';
       };
 
       const handleEditClick = (Id) => {
-        navigate(`/main/editOrder/${Id}`);
+        navigate(`/main/updateOrder/${Id}`);
     };
 
     const handleNextPage = () => {
@@ -83,7 +84,7 @@ import { useNavigate } from 'react-router-dom';
                             <td>{index + 1}</td>
                             <td>{`${order.FirstName} ${order.LastName}`}</td > 
                             <td>{order.ProductName}</td>
-                            <td>{order.StatusId}</td>
+                            <td>{OrderStatus[Number(order.StatusId)]} </td>
                             <td>{order.Quantity}</td>
                             <td>  <div className={styles.actionIcons}>
                                 <i className="material-icons" onClick={() => handleEditClick(order.Id)} >edit</i>

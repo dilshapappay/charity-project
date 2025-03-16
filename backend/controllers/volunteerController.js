@@ -60,8 +60,8 @@ exports.createVolunteer = async (req, res) => {
 
   try {
     const result = await dbClient.query(
-      `INSERT INTO "Camp_Volunteers"("UserId","CampId","CreatedOn")
-	VALUES ($1, $2,$3)`,
+      `INSERT INTO "Camp_Volunteers"("UserId","CampId","CreatedOn","IsDeleted")
+	VALUES ($1, $2,$3,false) RETURNING *`,
       [ UserId, CampId,new Date().toDateString()] 
     );
     res.status(201).json({ message: 'Volunteer added successfully', user: result.rows[0] });

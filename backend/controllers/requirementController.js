@@ -1,4 +1,5 @@
 const dbClient = require("../config/db");
+const OrderStatus=require('../config/orderStatus');
 
 
 exports.getRequirements = async (req, res) => {
@@ -24,28 +25,22 @@ exports.getRequirements = async (req, res) => {
     const params = [];
 
     if (req.query.district || req.query.categories) {
-      sql += " WHERE ";
-
       if (req.query.district) {
         params.push(req.query.district.toLowerCase());
-        sql += `LOWER(public."Camp_Data"."District") = $${params.length}`;
+        sql += ` AND LOWER(public."Camp_Data"."District") = $${params.length}`;
       }
 
       if (req.query.categories) {
-        if (req.query.district) {
-          sql += " AND ";
-        }
         params.push(req.query.categories);
-        sql += `public."Requirement"."ItemId" = $${params.length}`;
+        sql += ` AND public."Requirement"."ItemId" = $${params.length}`;
       }
     }
 
     sql += ` ORDER BY public."Requirement"."CreatedOn" DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
     params.push(limit, offset);
 
-
     const result = await dbClient.query(sql, params);
-    const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Requirement"');
+    const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Requirement" WHERE "IsDeleted" = false');
     const totalItems = parseInt(totalResult.rows[0].count);
 
     res.json({
@@ -82,42 +77,39 @@ exports.getRequirementById = async (req, res) => {
 };
 
 exports.createRequirements = async (req, res) => {
-  const { ItemId, CampId, StatusId, RequiredQuantity, AchievedQuantity} =
-    req.body;
+  const { ItemId, CampId,RequiredQuantity, AchievedQuantity } = req.body;
 
   try {
     const result = await dbClient.query(
-      `INSERT INTO public."Requirement"("ItemId", "CampId", "StatusId", "RequiredQuantity", "AchievedQuantity","CreatedOn")
-      VALUES ($1,$2,$3,$4,$5,$6)`,
-      [ItemId, CampId, StatusId, RequiredQuantity, AchievedQuantity, new Date().toDateString()]
+      `INSERT INTO public."Requirement"("ItemId", "CampId", "StatusId", "RequiredQuantity", "AchievedQuantity","CreatedOn","IsDeleted")
+      VALUES ($1,$2,$3,$4,$5,$6,false) RETURNING *`,
+      [ItemId, CampId, OrderStatus.PENDING, RequiredQuantity, AchievedQuantity, new Date().toDateString()]
     );
-    res
-      .status(201)
-      .json({
-        message: "Requirement inserted successfully",
-        user: result.rows[0],
-      });
+    res.status(201).json({
+      message: "Requirement inserted successfully",
+      requirement: result.rows[0],
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to insert Requirement" });
   }
 };
+
 exports.updateRequirement = async (req, res) => {
-  const { Id, ItemId, CampId, StatusId, RequiredQuantity, AchievedQuantity } =
-    req.body;
+  const { Id, ItemId, CampId, StatusId, RequiredQuantity, AchievedQuantity } = req.body;
   try {
     const result = await dbClient.query(
-      'UPDATE "Requirement" SET "ItemId" = $2, "CampId" = $3, "StatusId" = $4, "RequiredQuantity" = $5,  "AchievedQuantity" = $6  WHERE "Id" = $1',
+      'UPDATE "Requirement" SET "ItemId" = $2, "CampId" = $3, "StatusId" = $4, "RequiredQuantity" = $5,  "AchievedQuantity" = $6  WHERE "Id" = $1 RETURNING *',
       [Id, ItemId, CampId, StatusId, RequiredQuantity, AchievedQuantity]
     );
     if (result.rowCount > 0) {
-      res.json({ message: "Order updated successfully" }); 
+      res.json({ message: "Requirement updated successfully", requirement: result.rows[0] });
     } else {
       res.status(404).json({ message: "Requirement updation failed" });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to requirement user" });
+    res.status(500).json({ error: "Failed to update requirement" });
   }
 };
 
@@ -125,15 +117,17 @@ exports.deleteRequirement = async (req, res) => {
   const { id } = req.body;
   try {
     const result = await dbClient.query(
-      `UPDATE  public."Requirement" SET "IsDeleted"=true WHERE "Id" = $1`,
+      `UPDATE public."Requirement" SET "IsDeleted" = true WHERE "Id" = $1 RETURNING *`,
       [id]
     );
-    res
-      .status(201)
-      .json({
+    if (result.rowCount > 0) {
+      res.status(200).json({
         message: "Requirement deleted successfully",
-        user: result.rows[0],
+        requirement: result.rows[0],
       });
+    } else {
+      res.status(404).json({ message: "Requirement deletion failed" });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to delete requirement" });

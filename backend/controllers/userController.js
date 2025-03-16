@@ -76,7 +76,7 @@ exports.createUser = async (req, res) => {
     const Password = crypto.randomBytes(8).toString('hex'); // Generates a 16-character random password
     const hash = await bcrypt.hash(Password, salt);
     const newUser = await dbClient.query(
-      'INSERT INTO public."User" ("FirstName", "LastName", "Email", "Password", "RoleId", "Address", "Mobile", "CreatedOn") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+      'INSERT INTO public."User" ("FirstName", "LastName", "Email", "Password", "RoleId", "Address", "Mobile", "CreatedOn","IsDeleted") VALUES ($1, $2, $3, $4, $5, $6, $7, $8,false) RETURNING *',
       [FirstName, LastName, Email, hash, RoleId, Address, Mobile, new Date().toDateString()]
     );   
    

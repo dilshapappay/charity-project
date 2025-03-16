@@ -1,4 +1,6 @@
 const dbClient = require('../config/db');
+const OrderStatus=require('../config/orderStatus');
+
 exports.getOrders = async (req, res) => {
   const page = parseInt(req.query.page) || 1; 
   const limit = parseInt(req.query.limit) || 10; 
@@ -6,20 +8,14 @@ exports.getOrders = async (req, res) => {
 
   try {
     const result = await dbClient.query(`
-      SELECT 
-        public."Orders"."Id",
-        public."User"."FirstName",
-        public."User"."LastName",
-        public."Items"."Name" AS "ProductName",
-        public."Orders"."StatusId",
-        public."Orders"."Quantity"
-      FROM 
-        public."Orders"
-      LEFT JOIN 
-        public."User" ON public."Orders"."UserId" = public."User"."Id"
-     LEFT JOIN 
-              public."Requirement" ON public."Orders"."RequirementId" = public."Requirement"."Id"
-LEFT JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id" WHERE public."Orders"."IsDeleted" = false
+   SELECT         public."Orders"."Id",        public."User"."FirstName",        public."User"."LastName",
+        public."Items"."Name" AS "ProductName",        public."Orders"."StatusId",
+        public."Orders"."Quantity"      FROM         public."Orders"
+      LEFT JOIN         public."User" ON public."Orders"."UserId" = public."User"."Id"
+     LEFT JOIN public."Requirement" ON public."Orders"."RequirementId" = public."Requirement"."Id"
+LEFT JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"
+WHERE public."Orders"."IsDeleted" = false
+
       LIMIT $1 OFFSET $2`, [limit, offset]);
 
     const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Orders"');
@@ -58,13 +54,13 @@ exports.getOrderById=async(req,res)=>{
 }
 
 exports.createOrder = async (req, res) => {
-  const { UserId,RequirementId, StatusId,Quantity } = req.body;
+  const { UserId,RequirementId,Quantity } = req.body;
 
   try {
     const result = await dbClient.query(
-      `INSERT INTO public."Orders"( "UserId","RequirementId", "StatusId","Quantity","CreatedOn")
-    VALUES ($1, $2, $3, $4)`,
-      [UserId,RequirementId, StatusId,Quantity, new Date().toDateString()]
+      `INSERT INTO public."Orders"( "UserId","RequirementId", "StatusId","Quantity","CreatedOn","IsDeleted")
+    VALUES ($1, $2, $3, $4,$5,false) RETURNING *`,
+      [UserId,RequirementId, OrderStatus.PENDING,Quantity, new Date().toDateString()]
     );
     res.status(201).json({ message: 'Order inserted successfully', user: result.rows[0] });
   } catch (error) {
@@ -92,7 +88,7 @@ exports.deleteOrder = async (req, res) => {
   const { id } = req.body;
   try {
     const result = await dbClient.query(
-      `DELETE FROM public."Orders" WHERE "Id" = $1`,
+      `UPDATE public."Orders" SET "IsDeleted"=true WHERE "Id" = $1`,
       [id]
     );
     res.status(201).json({ message: 'Order deleted successfully', user: result.rows[0] });
