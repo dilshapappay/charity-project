@@ -5,7 +5,7 @@ const jwtConfig = require('../config/jwt-config');
 const dbClient = require('../config/db');
 
 exports.register = async (req, res) => {
-  const { firstName, lastName, email, password, password2,RoleId } = req.irbody;
+  const { firstName, lastName, email, password, password2,RoleId } = req.body;
   let errors = [];
 
   if (!firstName || !lastName || !email || !password || !password2 || RoleId) {
