@@ -56,6 +56,19 @@ export default function Orders() {
     }
   };
 
+  const getStatusClass = (statusId) => {
+    switch (statusId) {
+      case 1: // Assuming 1 is for Pending
+        return 'status-pending';
+      case 2: // Assuming 2 is for Completed
+        return 'status-completed';
+      case 3: // Assuming 3 is for Cancelled
+        return 'status-cancelled';
+      default:
+        return '';
+    }
+  };
+
   return (
     <div className={styles.tableContainer}>
       <h2>Order Details</h2>
@@ -82,7 +95,7 @@ export default function Orders() {
               <td>{index + 1}</td>
               <td>{`${order.FirstName} ${order.LastName}`}</td >
               <td>{order.ProductName}</td>
-              <td>{OrderStatus[Number(order.StatusId)]} </td>
+              <td className={getStatusClass(order.StatusId)}>{OrderStatus[Number(order.StatusId)]}</td>
               <td>{order.Quantity}</td>
               <td>  <div className={styles.actionIcons}>
                 <i className="material-icons" onClick={() => handleEditClick(order.Id)} >edit</i>

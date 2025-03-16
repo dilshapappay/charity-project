@@ -34,17 +34,30 @@ export default function OurNeeds() {
         setCategories(allItems);
     };
 
-
     const handleSearch = async function () {
-        debugger
-        const requirements = await getRequirements(selectedDistrict, selectedCategory);
-        if (requirements.data.length === 0) {
-            setRequirements([])
+        let allRequirements = [];
+        let page = 1;
+        const limit = 10;
+        let hasMoreRequirements = true;
+
+        while (hasMoreRequirements) {
+            const response = await getRequirements(selectedDistrict, selectedCategory, page, limit);
+            const requirements = response.data;
+            allRequirements = [...allRequirements, ...requirements];
+            if (requirements.length < limit) {
+                hasMoreRequirements = false;
+            } else {
+                page++;
+            }
+        }
+
+        if (allRequirements.length === 0) {
+            setRequirements([]);
             return;
         }
 
         // Group the requirements by Name
-        const groupedRequirements = requirements.data.reduce((acc, requirement) => {
+        const groupedRequirements = allRequirements.reduce((acc, requirement) => {
             const { District } = requirement;
             if (!acc[District]) {
                 acc[District] = [];
@@ -111,12 +124,12 @@ export default function OurNeeds() {
                 <button className={styles.button} onClick={handleSearch}>Search</button>
             </div>
             <div>
-                {requirements.length == 0 && (
+                {Object.keys(requirements).length === 0 && (
                     <div className='no-data-table'>
                         No Requirements found !!!
                     </div>
                 )}
-                {requirements.length > 0 && Object.keys(requirements).map((district) => (
+                {Object.keys(requirements).length > 0 && Object.keys(requirements).map((district) => (
                     <div key={district}>
                         <div className={styles.sectionTitle}><h3>{capitalizeFirstLetter(district)}</h3></div>
                         <div className={styles.cardContainer}>
