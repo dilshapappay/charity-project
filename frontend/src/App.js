@@ -22,6 +22,7 @@ import { AuthProvider } from "./Auth/AuthContext";
 import ProtectedRoute
  from "./Auth/ProtectedRoute";
 import AddOrderForm from "./order/addOrder";
+import ChangePassword from "./ChangePassword/ChangePassword";
 function App() {
   return (
     <div className="App">
@@ -64,6 +65,8 @@ function App() {
               <Route path="orders" element={<Orders />} />
               <Route path="addorder" element={<AddOrderForm />} />
               <Route path="updateOrder/:id" element={<AddOrderForm />} />
+
+              <Route path="change-password" element={<ChangePassword></ChangePassword>}></Route>
             </Route>
             </Route>
           </Routes>

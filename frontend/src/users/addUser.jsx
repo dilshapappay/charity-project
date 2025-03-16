@@ -12,7 +12,6 @@ export default function AddUserForm() {
     FirstName: '',
     LastName: '',
     Email: '',
-    Password: '',
     RoleId: '',
     Address: '',
     Mobile: '',
@@ -34,7 +33,6 @@ export default function AddUserForm() {
             FirstName: user.FirstName,
             LastName: user.LastName,
             Email: user.Email,
-            Password: user.Password,
             RoleId: user.RoleId,
             Address: user.Address,
             Mobile: user.Mobile,
@@ -116,17 +114,6 @@ export default function AddUserForm() {
             onChange={handleChange}
           />
         </div>
-        <div className={styles.formGroup}>
-          <label>Password</label>
-          <input
-            type="password"
-            name="Password"
-            value={user.Password}
-            onChange={handleChange}
-          />
-        </div>
-
-
 
         <div className={styles.formGroup}>
           <label>Role</label>

@@ -20,19 +20,47 @@ exports.getOrders = async (req, res) => {
       WHERE public."Orders"."IsDeleted" = false
     `;
 
+    let countQuery = `
+      SELECT COUNT(*) 
+      FROM public."Orders"
+      LEFT JOIN public."Requirement" ON public."Orders"."RequirementId" = public."Requirement"."Id"
+      WHERE public."Orders"."IsDeleted" = false
+    `;
+
     const params = [limit, offset];
+    const countParams = [];
 
     // Add filter for normal users
     if (user.RoleId === Role["Normal User"]) {
       query += ` AND public."Orders"."UserId" = $3`;
+      countQuery += ` AND public."Orders"."UserId" = $1`;
       params.push(user.Id);
+      countParams.push(user.Id);
+    }
+
+    // Add filter for Camp Admins
+    if (user.RoleId === Role["Camp Admin"]) {
+      const campResult = await dbClient.query(
+        'SELECT "Id" FROM public."Camp_Data" WHERE "CampAdminId" = $1',
+        [user.Id]
+      );
+      const campIds = campResult.rows.map(row => row.Id);
+
+      if (campIds.length > 0) {
+        query += ` AND public."Requirement"."CampId" = ANY($3::int[])`;
+        countQuery += ` AND public."Requirement"."CampId" = ANY($1::int[])`;
+        params.push(campIds);
+        countParams.push(campIds);
+      } else {
+        query += ` AND 1 = 0`; // No camps found for this admin, return no results
+        countQuery += ` AND 1 = 0`;
+      }
     }
 
     query += ` LIMIT $1 OFFSET $2`;
 
     const result = await dbClient.query(query, params);
-
-    const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Orders" WHERE "IsDeleted" = false');
+    const totalResult = await dbClient.query(countQuery, countParams);
     const totalItems = parseInt(totalResult.rows[0].count); // Get the total count of orders
 
     res.json({
@@ -47,7 +75,6 @@ exports.getOrders = async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve Orders' });
   }
 };
-
 exports.getOrderById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -67,7 +94,7 @@ exports.getOrderById = async (req, res) => {
 }
 
 exports.createOrder = async (req, res) => {
-  const {RequirementId, Quantity } = req.body;
+  const { RequirementId, Quantity } = req.body;
   const userId = req.user.Id;
   try {
     const result = await dbClient.query(
@@ -90,7 +117,7 @@ exports.updateOrder = async (req, res) => {
       [Id, userId, Quantity, new Date().toDateString()]
     );
     if (result.rowCount > 0) {
-      res.json({ message: "Order updated successfully" }); 
+      res.json({ message: "Order updated successfully" });
     } else {
       res.status(404).json({ message: 'Order updation failed' });
     }

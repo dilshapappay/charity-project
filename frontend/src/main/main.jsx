@@ -29,7 +29,7 @@ function Main() {
           <img src="../photos/dave.jpg" alt="Profile Picture" />
           {dropdownOpen && (
             <div className={styles.dropdownMenu}>
-              <Link to="/profile">Profile</Link>
+              <Link to="/main/change-password">Change Password</Link>
               <button onClick={handleLogout}>Logout</button>
             </div>
           )}
@@ -39,17 +39,32 @@ function Main() {
         <aside className={styles.sidebar}>
           <nav>
             <ul>
-              {userRole !== Role["Normal User"] && (
+              {
+                userRole === Role["Normal User"] && (
+                  <>
+                    <li><Link to="/main/orders">Orders</Link></li>
+                  </>
+                )
+              }
+              {
+                userRole === Role["Camp Admin"] && (
+                  <>
+                    <li><Link to="/main/orders">Orders</Link></li>
+                    <li><Link to="/main/users">Users</Link></li>
+                    <li><Link to="/main/requirements">Requirements</Link></li>
+                    <li><Link to="/main/items">Items</Link></li>
+                  </>
+                )
+              }
+              {userRole == Role.Master && (
                 <>
                   <li><Link to="/main/users">Users</Link></li>
                   <li><Link to="/main/requirements">Requirements</Link></li>
                   <li><Link to="/main/camps">Camps</Link></li>
                   <li><Link to="/main/items">Items</Link></li>
                   <li><Link to="/main/volunteers">Volunteers</Link></li>
+                  <li><Link to="/main/orders">Orders</Link></li>
                 </>
-              )}
-              {userRole === Role["Normal User"] && (
-                <li><Link to="/main/orders">Orders</Link></li>
               )}
             </ul>
           </nav>

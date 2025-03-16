@@ -76,3 +76,48 @@ exports.forgotPassword = (req, res) => {
   // Implement forgot password functionality here
   res.send('Forgot Password Handle');
 };
+
+// Change Password Handle
+exports.changePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user.Id;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ msg: 'Please enter all fields' });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({ msg: 'New password must be at least 6 characters' });
+  }
+
+  try {
+    const result = await dbClient.query(
+      'SELECT * FROM public."User" WHERE public."User"."Id" = $1',
+      [userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(400).json({ msg: 'User not found' });
+    }
+
+    const user = result.rows[0];
+    const isMatch = await bcrypt.compare(currentPassword, user.Password);
+
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Current password is incorrect' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newPassword, salt);
+
+    await dbClient.query(
+      'UPDATE public."User" SET "Password" = $1 WHERE "Id" = $2',
+      [hash, userId]
+    );
+
+    res.json({ msg: 'Password changed successfully' });
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Something went wrong', details: err.message });
+  }
+};
