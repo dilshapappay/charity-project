@@ -35,7 +35,7 @@ async function apiClient(endpoint, { method = 'GET', body, includeToken = true }
   }
   
   if (!response.ok) {
-    if (response.status === 401) {
+    if (response.status === 401 || response.status === 403) {
       // Redirect to login page if the response status is 401
       window.location.href = '/login';
       return;

@@ -1,7 +1,6 @@
 import apiClient from './apiClient';
 
 export function getItems(page = 1, limit = 10){
-  debugger
     return apiClient(`/items?page=${page}&limit=${limit}`);
 }
 

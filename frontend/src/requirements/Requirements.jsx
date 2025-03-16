@@ -25,7 +25,6 @@ export default function Requirements() {
   };
 
   useEffect(() => {
-    debugger
     fetchRequirements(page, limit);
   }, [page, limit]);
 

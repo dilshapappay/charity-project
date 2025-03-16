@@ -6,7 +6,6 @@ export const AuthProvider =({children}) => {
     const [isAuthenticated,setIsAuthenticated] = useState(false);
 
     const login = ()=>{
-        debugger
         setIsAuthenticated(true)
     }
 

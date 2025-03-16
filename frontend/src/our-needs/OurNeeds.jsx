@@ -4,12 +4,15 @@ import { getItems } from '../services/itemService';
 import { getRequirements } from '../services/requirementService';
 import districts from '../utils/districts';
 import { capitalizeFirstLetter } from '../utils/util';
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function OurNeeds() {
     const [categories, setCategories] = useState([]);
     const [requirements, setRequirements] = useState([]);
     const [selectedDistrict, setSelectedDistrict] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const fetchAllItems = async () => {
         let allItems = [];
@@ -65,6 +68,16 @@ export default function OurNeeds() {
         setSelectedCategory(event.target.value);
     };
 
+    const donateNow = (requirementId) => {
+        const tokenExist = localStorage.getItem('token');
+        if (tokenExist) {
+            navigate("/main/addorder?reqid=" + requirementId);
+        } else {
+            const redirectUrl = encodeURIComponent(`/main/addorder?reqid=${requirementId}`);
+            navigate(`/login?redirect=${redirectUrl}`);
+        }
+    }
+
     return (
         <div>
             <div className={styles.header}>
@@ -104,7 +117,7 @@ export default function OurNeeds() {
                                     <p>{requirement.Description}</p>
                                     <p>Needed: {requirement.RequiredQuantity}</p>
                                     <p>District: {requirement.District}</p>
-                                    <button className="btn btn-success">Donate</button>
+                                    <button className="btn btn-success" onClick={() => donateNow(requirement.Id)}>Donate</button>
                                 </div>
                             ))}
                         </div>

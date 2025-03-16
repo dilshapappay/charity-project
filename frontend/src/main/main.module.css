@@ -1,11 +1,9 @@
-
 .Main {
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden; 
 }
-
 
 .header {
   position: fixed;
@@ -51,6 +49,39 @@
   border: 2px solid #2d8144;
 }
 
+.header .profile {
+  position: relative;
+  cursor: pointer;
+}
+
+.header .dropdownMenu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.header .dropdownMenu a,
+.header .dropdownMenu button {
+  display: block;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+}
+
+.header .dropdownMenu a:hover,
+.header .dropdownMenu button:hover {
+  background-color: #f0f0f0;
+}
+
 /* Content wrapper */
 .content {
   display: flex;
@@ -59,7 +90,6 @@
   overflow: hidden; /* Prevents the sidebar from scrolling */
 }
 
-
 .sidebar {
   width: 200px;
   background-color: #ffffff;
@@ -67,7 +97,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 80px;
-   left:0;
+  left: 0;
   bottom: 0;
   overflow-y: auto; /* Enables sidebar scrolling */
   border-radius: 8px;
@@ -101,7 +131,7 @@
 }
 
 .mainContent {
-  margin-top:20px;
+  margin-top: 20px;
   margin-left: 220px; 
   flex-grow: 1;
   padding: 20px;

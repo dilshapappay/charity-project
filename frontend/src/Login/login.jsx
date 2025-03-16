@@ -3,7 +3,7 @@ import {
   login as loginServiceMethod,
   register,
 } from "../services/loginService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,useLocation} from "react-router-dom";
 import styles from "./login.module.css";
 import { useAuth } from "../Auth/AuthContext";
 
@@ -16,11 +16,11 @@ export default function Login() {
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated, login, logout } = useAuth();
   // localStorage.removeItem("token")
   // logout();
   const handleSubmit = async (e) => {
-    debugger;
     e.preventDefault();
     setError(null);
 
@@ -29,14 +29,16 @@ export default function Login() {
         if (!isAuthenticated) {
           const data = await loginServiceMethod(email, password);
           localStorage.setItem("token", data.token);
+          localStorage.setItem("role", data.role);
           login();
         }
-        navigate("/main");
+        const redirectUrl = new URLSearchParams(location.search).get('redirect') || '/main';
+        navigate(redirectUrl);
         return;
       }
 
       await register(firstName, lastName, email, password, confirmPassword);
-    setIsLoginPage(true);
+      setIsLoginPage(true);
       navigate("/login");
 
     } catch (err) {

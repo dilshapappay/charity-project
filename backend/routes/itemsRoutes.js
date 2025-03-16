@@ -6,7 +6,7 @@ const { updateItemSchema } = require("../api-data-schema/updateItemSchema");
 const authMiddleware = require('../middlewares/authMiddlware');
 const router = express.Router();
 
-router.get("/",authMiddleware, itemsController.getItems);
+router.get("/", itemsController.getItems);
 router.get("/:id", itemsController.getItemById);
 router.post("/", validate(itemSchema), itemsController.createItems);
 router.put("/", validate(updateItemSchema), itemsController.updateItem);

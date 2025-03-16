@@ -100,7 +100,7 @@ exports.updateUser = async (req, res) => {
       [Id, FirstName, LastName, RoleId, Password, Email, Address, Mobile, new Date().toDateString()]
     );
     if (result.rowCount > 0) {
-      res.json({ message: "Order updated successfully" }); 
+      res.json({ message: "User updated successfully" }); 
 
     } else {
       res.status(404).json({ message: "User updation failed " });

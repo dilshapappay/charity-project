@@ -1,5 +1,5 @@
 const dbClient = require("../config/db");
-const OrderStatus=require('../config/orderStatus');
+const OrderStatus = require('../config/orderStatus');
 
 
 exports.getRequirements = async (req, res) => {
@@ -61,7 +61,20 @@ exports.getRequirementById = async (req, res) => {
 
   try {
     const result = await dbClient.query(
-      'SELECT * FROM "Requirement" WHERE "Id" = $1',
+      `SELECT 
+      public."Requirement"."Id",
+      public."Items"."Name" AS "ItemName",
+      public."Items"."Description",
+      public."Requirement"."RequiredQuantity",
+      public."Requirement"."AchievedQuantity",
+      public."Camp_Data"."Name" AS CampName,
+      public."Camp_Data"."District",
+      public."Requirement"."StatusId"
+      FROM "Requirement" 
+      JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id"
+      JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"
+      WHERE public."Requirement"."IsDeleted" = false
+      AND public."Requirement"."Id" = $1`,
       [id]
     );
 
@@ -77,7 +90,7 @@ exports.getRequirementById = async (req, res) => {
 };
 
 exports.createRequirements = async (req, res) => {
-  const { ItemId, CampId,RequiredQuantity, AchievedQuantity } = req.body;
+  const { ItemId, CampId, RequiredQuantity, AchievedQuantity } = req.body;
 
   try {
     const result = await dbClient.query(

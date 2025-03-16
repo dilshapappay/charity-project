@@ -66,7 +66,7 @@ exports.login = (req, res, next) => {
       }
 
       const token = jwt.sign(user, jwtConfig.secret, { expiresIn: jwtConfig.expiresIn });
-      return res.json({ token });
+      return res.json({ token,role:user.RoleId });
     });
   })(req, res, next);
 };

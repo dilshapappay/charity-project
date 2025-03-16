@@ -1,51 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { createUsers,getUserById,updateUser } from '../services/userService';
-import { getRoles } from '../services/roleService';
+import { createUsers, getUserById, updateUser } from '../services/userService';
 import styles from './addUser.module.css';
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-
+import Role from '../enums/Role.js';
 
 export default function AddUserForm() {
   const navigate = useNavigate();
-    const { id } = useParams();
-    const [user, setUser] = useState({
-        FirstName: '',
-        LastName: '',
-        Email: '',
-        Password: '',
-        RoleId: '',
-        Address: '',
-        Mobile: '',
-      });
+  const { id } = useParams();
+  const [user, setUser] = useState({
+    FirstName: '',
+    LastName: '',
+    Email: '',
+    Password: '',
+    RoleId: '',
+    Address: '',
+    Mobile: '',
+  });
 
-  const [roles, setRoles] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  useEffect(() => {
-    const fetchRoles = async function () {
-      try {
-        const roles = await getRoles();
-        console.log(roles);
-        setRoles(roles );
-      } catch (error) {
-        console.error('Error fetching roles:', error);
-      }
-    };
-    fetchRoles();
-  }, []);
 
-useEffect(() => {
+  useEffect(() => {
     console.log("User ID:", id);
     if (id) {
       setIsEditMode(true);
       const fetchUser = async function () {
         try {
           const user = await getUserById(id);
-          console.log("Fetched user:", user );
+          console.log("Fetched user:", user);
           setUser({
-            Id:id,
-            FirstName:user.FirstName,
+            Id: id,
+            FirstName: user.FirstName,
             LastName: user.LastName,
             Email: user.Email,
             Password: user.Password,
@@ -69,22 +55,22 @@ useEffect(() => {
   };
 
   const handleSubmit = async (e) => {
-     e.preventDefault();
-     try {
-       if (isEditMode) {
- 
-         await updateUser(user);
-         alert("User updated successfully");
-       } else {
-         await createUsers(user);
-         alert("User added successfully");
-       }
-       navigate("/main/users");
-     } catch (error) {
-       console.error("Error saving user:", error);
-       alert("Error saving user");
-     }
-   };
+    e.preventDefault();
+    try {
+      if (isEditMode) {
+
+        await updateUser(user);
+        alert("User updated successfully");
+      } else {
+        await createUsers(user);
+        alert("User added successfully");
+      }
+      navigate("/main/users");
+    } catch (error) {
+      console.error("Error saving user:", error);
+      alert("Error saving user");
+    }
+  };
 
   const handleReset = () => {
     setUser({
@@ -139,16 +125,16 @@ useEffect(() => {
             onChange={handleChange}
           />
         </div>
-        
 
-        
+
+
         <div className={styles.formGroup}>
           <label>Role</label>
-          <select name="RoleId" value={user.RoleId} onChange={handleChange}>
+          <select name="RoleId" value={user?.RoleId} onChange={handleChange}>
             <option value="">Select Role</option>
-            {roles.map((role) => (
-              <option key={role.id} value={role.id}>
-                {role.RoleName}
+            {Object.entries(Role).map(([key, value]) => (
+              <option key={value} value={value}>
+                {key}
               </option>
             ))}
           </select>

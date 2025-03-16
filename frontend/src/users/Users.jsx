@@ -37,7 +37,6 @@ export default function Users() {
         alert(result.message);
         fetchUsers();
       } catch (error) {
-        debugger
         alert(error.message);
       }
     }
