@@ -1,6 +1,6 @@
 const dbClient = require("../config/db");
-const OrderStatus = require('../config/orderStatus');
-
+const OrderStatus = require("../config/orderStatus");
+const upload = require("../config/upload");
 
 exports.getRequirements = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
@@ -16,7 +16,8 @@ exports.getRequirements = async (req, res) => {
       public."Requirement"."RequiredQuantity",
       public."Requirement"."AchievedQuantity",
       public."Camp_Data"."District",
-      public."Requirement"."StatusId"
+      public."Requirement"."StatusId",
+      public."Requirement"."ImageURL"
       FROM public."Requirement"
       JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id"
       JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"
@@ -36,19 +37,30 @@ exports.getRequirements = async (req, res) => {
       }
     }
 
-    sql += ` ORDER BY public."Requirement"."CreatedOn" DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+    sql += ` ORDER BY public."Requirement"."CreatedOn" DESC LIMIT $${
+      params.length + 1
+    } OFFSET $${params.length + 2}`;
     params.push(limit, offset);
 
     const result = await dbClient.query(sql, params);
-    const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Requirement" WHERE "IsDeleted" = false');
+    const totalResult = await dbClient.query(
+      'SELECT COUNT(*) FROM public."Requirement" WHERE "IsDeleted" = false'
+    );
     const totalItems = parseInt(totalResult.rows[0].count);
+
+    const requirements = result.rows.map((requirement) => {
+      if (requirement.ImageURL) {
+        requirement.ImageURL = `${req.protocol}://${req.get("host")}${requirement.ImageURL}`;
+      }
+      return requirement;
+    });
 
     res.json({
       page,
       limit,
       totalItems,
       totalPages: Math.ceil(totalItems / limit),
-      data: result.rows
+      data: requirements,
     });
   } catch (error) {
     console.error(error);
@@ -69,7 +81,8 @@ exports.getRequirementById = async (req, res) => {
       public."Requirement"."AchievedQuantity",
       public."Camp_Data"."Name" AS CampName,
       public."Camp_Data"."District",
-      public."Requirement"."StatusId"
+      public."Requirement"."StatusId",
+      public."Requirement"."ImageURL"
       FROM "Requirement" 
       JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id"
       JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"
@@ -90,17 +103,34 @@ exports.getRequirementById = async (req, res) => {
 };
 
 exports.createRequirements = async (req, res) => {
-  const { ItemId, CampId, RequiredQuantity, AchievedQuantity } = req.body;
-
   try {
-    const result = await dbClient.query(
-      `INSERT INTO public."Requirement"("ItemId", "CampId", "StatusId", "RequiredQuantity", "AchievedQuantity","CreatedOn","IsDeleted")
-      VALUES ($1,$2,$3,$4,$5,$6,false) RETURNING *`,
-      [ItemId, CampId, OrderStatus.PENDING, RequiredQuantity, AchievedQuantity, new Date().toDateString()]
-    );
-    res.status(201).json({
-      message: "Requirement inserted successfully",
-      requirement: result.rows[0],
+    upload(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ error: err });
+      }
+
+      const { ItemId, CampId, RequiredQuantity, AchievedQuantity } = req.body;
+      const ImageURL = req.file
+        ? `/uploads/${req.file.filename}`
+        : null;
+
+      const result = await dbClient.query(
+        `INSERT INTO public."Requirement"("ItemId", "CampId", "StatusId", "RequiredQuantity", "AchievedQuantity", "ImageURL", "CreatedOn", "IsDeleted")
+        VALUES ($1, $2, $3, $4, $5, $6, $7, false) RETURNING *`,
+        [
+          ItemId,
+          CampId,
+          OrderStatus.PENDING,
+          RequiredQuantity,
+          AchievedQuantity,
+          ImageURL,
+          new Date().toISOString(),
+        ]
+      );
+      res.status(201).json({
+        message: "Requirement inserted successfully",
+        requirement: result.rows[0],
+      });
     });
   } catch (error) {
     console.error(error);
@@ -109,23 +139,44 @@ exports.createRequirements = async (req, res) => {
 };
 
 exports.updateRequirement = async (req, res) => {
-  const { Id, ItemId, CampId, StatusId, RequiredQuantity, AchievedQuantity } = req.body;
-  try {
-    const result = await dbClient.query(
-      'UPDATE "Requirement" SET "ItemId" = $2, "CampId" = $3, "StatusId" = $4, "RequiredQuantity" = $5,  "AchievedQuantity" = $6  WHERE "Id" = $1 RETURNING *',
-      [Id, ItemId, CampId, StatusId, RequiredQuantity, AchievedQuantity]
-    );
-    if (result.rowCount > 0) {
-      res.json({ message: "Requirement updated successfully", requirement: result.rows[0] });
-    } else {
-      res.status(404).json({ message: "Requirement updation failed" });
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ error: err });
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to update requirement" });
-  }
-};
 
+    const { Id, ItemId, CampId, StatusId, RequiredQuantity, AchievedQuantity } =
+      req.body;
+    const ImageURL = req.file
+      ? `/uploads/${req.file.filename}`
+      : req.body.ImageURL;
+
+    try {
+      const result = await dbClient.query(
+        'UPDATE "Requirement" SET "ItemId" = $2, "CampId" = $3, "StatusId" = $4, "RequiredQuantity" = $5, "AchievedQuantity" = $6, "ImageURL" = $7 WHERE "Id" = $1 RETURNING *',
+        [
+          Id,
+          ItemId,
+          CampId,
+          StatusId,
+          RequiredQuantity,
+          AchievedQuantity,
+          ImageURL,
+        ]
+      );
+      if (result.rowCount > 0) {
+        res.json({
+          message: "Requirement updated successfully",
+          requirement: result.rows[0],
+        });
+      } else {
+        res.status(404).json({ message: "Requirement updation failed" });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Failed to update requirement" });
+    }
+  });
+};
 exports.deleteRequirement = async (req, res) => {
   const { id } = req.body;
   try {

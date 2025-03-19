@@ -82,6 +82,7 @@
   background-color: #f0f0f0;
 }
 
+
 /* Content wrapper */
 .content {
   display: flex;
@@ -140,4 +141,7 @@
   background-color: #ffffff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+}
+.activeLink {
+  background-color: #1e6b2f;
 }

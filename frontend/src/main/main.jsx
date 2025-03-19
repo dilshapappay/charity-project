@@ -20,7 +20,8 @@ function Main() {
   return (
     <div className={styles.Main}>
       <header className={styles.header}>
-        <div className={styles.logo}>DONATENOW</div>
+        <div className={styles.logo}>
+          <Link to="/">DONATENOW</Link></div>
         <div className={styles.searchBar}>
           <i className="fas fa-search"></i>
           <input type="text" placeholder="Search" />
@@ -34,6 +35,7 @@ function Main() {
             </div>
           )}
         </div>
+
       </header>
       <div className={styles.content}>
         <aside className={styles.sidebar}>

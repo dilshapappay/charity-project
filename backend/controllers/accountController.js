@@ -3,12 +3,13 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const jwtConfig = require('../config/jwt-config');
 const dbClient = require('../config/db');
+const Role = require('../config/Role');
 
 exports.register = async (req, res) => {
-  const { firstName, lastName, email, password, password2,RoleId } = req.body;
+  const { firstName, lastName, email, password, password2 } = req.body;
   let errors = [];
 
-  if (!firstName || !lastName || !email || !password || !password2 || !RoleId) {
+  if (!firstName || !lastName || !email || !password || !password2) {
     errors.push({ msg: 'Please enter all fields' });
   }
 
@@ -39,7 +40,7 @@ exports.register = async (req, res) => {
 
     await dbClient.query(
       'INSERT INTO public."User" ("FirstName", "LastName", "Email", "Password","RoleId") VALUES ($1, $2, $3, $4,$5)',
-      [firstName, lastName, email, hash,RoleId]
+      [firstName, lastName, email, hash,Role["Normal User"]]
     );
 
     res.json({ msg: 'You are now registered and can log in' });

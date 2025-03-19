@@ -7,12 +7,23 @@ import { capitalizeFirstLetter } from '../utils/util';
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
 export default function OurNeeds() {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    window.location.href = '/login';
+  };
+
     const [categories, setCategories] = useState([]);
     const [requirements, setRequirements] = useState([]);
     const [selectedDistrict, setSelectedDistrict] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const navigate = useNavigate();
-    const location = useLocation();
 
     const fetchAllItems = async () => {
         let allItems = [];
@@ -34,7 +45,7 @@ export default function OurNeeds() {
         setCategories(allItems);
     };
 
-    const handleSearch = async function () {
+    const handleSearch = async () => {
         let allRequirements = [];
         let page = 1;
         const limit = 10;
@@ -55,8 +66,7 @@ export default function OurNeeds() {
             setRequirements([]);
             return;
         }
-
-        // Group the requirements by Name
+        // Group the requirements by District
         const groupedRequirements = allRequirements.reduce((acc, requirement) => {
             const { District } = requirement;
             if (!acc[District]) {
@@ -89,22 +99,36 @@ export default function OurNeeds() {
             const redirectUrl = encodeURIComponent(`/main/addorder?reqid=${requirementId}`);
             navigate(`/login?redirect=${redirectUrl}`);
         }
-    }
+    };
 
     return (
         <div>
             <div className={styles.header}>
-                <div className={styles.logo}>DONATENOW</div>
+                <div className={styles.logo}>
+                    <Link to="/">DONATENOW</Link>
+                </div>
                 <div className={styles.searchBar}>
                     <i className="fas fa-search"></i>
                     <input type="text" placeholder="Search" />
                 </div>
-                <Link to="/login">
-                    <button>
-                        Login
-                    </button>
-                </Link>
+                {localStorage.getItem('token') ? (
+                   <div className={styles.profile} onClick={toggleDropdown}>
+                             <img src="../photos/dave.jpg" alt="Profile Picture" />
+                             {dropdownOpen && (
+                               <div className={styles.dropdownMenu}>
+                                 <Link to="/main/change-password">Change Password</Link>
+                                 <button onClick={handleLogout}>Logout</button>
+                               </div>
+                             )}
+                           </div>
+                ) : (
+                    <Link to="/login">
+                        <button>Login</button>
+                    </Link>
+                )}
             </div>
+
+         
             <div className={styles.filters}>
                 <select value={selectedDistrict} onChange={handleDistrictChange}>
                     <option value="">Select District</option>
@@ -117,9 +141,9 @@ export default function OurNeeds() {
 
                 <select value={selectedCategory} onChange={handleCategoryChange}>
                     <option value="">Select Category</option>
-                    {categories.map(item => {
-                        return (<option key={item.Id} value={item.Id}>{item.Name}</option>)
-                    })}
+                    {categories.map(item => (
+                        <option key={item.Id} value={item.Id}>{item.Name}</option>
+                    ))}
                 </select>
                 <button className={styles.button} onClick={handleSearch}>Search</button>
             </div>
@@ -133,8 +157,13 @@ export default function OurNeeds() {
                     <div key={district}>
                         <div className={styles.sectionTitle}><h3>{capitalizeFirstLetter(district)}</h3></div>
                         <div className={styles.cardContainer}>
-                            {requirements[district].map((requirement, index) => (
-                                <div key={index} className={styles.card}>
+                            {requirements[district].map((requirement) => (
+                                <div key={requirement.Id} className={styles.card}>
+                                    <div className={styles.imageContainer}>
+                                        {requirement.ImageURL && (
+                                            <img src={requirement.ImageURL} alt={requirement.Name} className={styles.image} />
+                                        )}
+                                    </div>
                                     <h3>{requirement.Name}</h3>
                                     <p>{requirement.Description}</p>
                                     <p>Needed: {requirement.RequiredQuantity}</p>
@@ -147,5 +176,5 @@ export default function OurNeeds() {
                 ))}
             </div>
         </div>
-    )
+    );
 }
