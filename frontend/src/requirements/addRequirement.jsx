@@ -22,29 +22,48 @@ export default function AddRequirementForm() {
   const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
-    const fetchItems = async function () {
+    const fetchAllItems = async function () {
       try {
-        const items = await getItems();
-        console.log(items);
-        setItems(items.data);
-      } catch (error) {
-        console.error('Error fetching items:', error);
-      }
-    }
-    fetchItems();
-  }, []);
+        let allItems = [];
+        let page = 1;
+        let hasMoreItems = true;
 
-  useEffect(() => {
-    const fetchCamps = async function () {
-      try {
-        const camps = await getCamps();
-        console.log(camps);
-        setCamps(camps.data);
+        while (hasMoreItems) {
+          const response = await getItems(page);
+          console.log(`Fetched items for page ${page}:`, response.data);
+          allItems = [...allItems, ...response.data];
+          hasMoreItems = response.data.length > 0;
+          page++;
+        }
+
+        setItems(allItems);
       } catch (error) {
-        console.error('Error fetching camps:', error);
+        console.error('Error fetching all items:', error);
       }
-    }
-    fetchCamps();
+    };
+    fetchAllItems();
+  }, []);
+  useEffect(() => {
+    const fetchAllCamps = async function () {
+      try {
+        let allCamps = [];
+        let page = 1;
+        let hasMoreCamps = true;
+
+        while (hasMoreCamps) {
+          const response = await getCamps(page);
+          console.log(`Fetched camps for page ${page}:`, response.data);
+          allCamps = [...allCamps, ...response.data];
+          hasMoreCamps = response.data.length > 0;
+          page++;
+        }
+
+        setCamps(allCamps);
+      } catch (error) {
+        console.error('Error fetching all camps:', error);
+      }
+    };
+    fetchAllCamps();
   }, []);
 
   useEffect(() => {

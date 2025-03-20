@@ -146,6 +146,8 @@ exports.updateRequirement = async (req, res) => {
 
     const { Id, ItemId, CampId, StatusId, RequiredQuantity, AchievedQuantity } =
       req.body;
+
+
     const ImageURL = req.file
       ? `/uploads/${req.file.filename}`
       : req.body.ImageURL;
