@@ -73,7 +73,13 @@ exports.getRequirementById = async (req, res) => {
 
   try {
     const result = await dbClient.query(
-      'SELECT * FROM public."Requirement" WHERE "Id" = $1',
+      `SELECT public."Requirement".*, 
+          public."Camp_Data"."Name" AS "CampName", 
+          public."Items"."Name" 
+       FROM public."Requirement"
+       LEFT JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"
+       LEFT JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id"
+       WHERE public."Requirement"."Id" = $1`,
       [id]
     );
 

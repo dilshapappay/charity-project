@@ -11,7 +11,8 @@ exports.getOrders = async (req, res) => {
   try {
     let query = `
       SELECT public."Orders"."Id", public."User"."FirstName", public."User"."LastName",
-             public."Items"."Name" AS "ProductName", public."Orders"."StatusId",
+             public."Items"."Name" AS "ProductName",
+              public."Orders"."StatusId",
              public."Orders"."Quantity"
       FROM public."Orders"
       LEFT JOIN public."User" ON public."Orders"."UserId" = public."User"."Id"
@@ -78,7 +79,16 @@ exports.getOrders = async (req, res) => {
 exports.getOrderById = async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await dbClient.query('SELECT * FROM  "Orders" WHERE "Id"=$1',
+const result = await dbClient.query(`SELECT "Orders".*, 
+             "Items"."Name" AS "RequirementName", 
+             "Camp_Data"."Name" AS "CampName", 
+             "Requirement"."AchievedQuantity", 
+             "Requirement"."RequiredQuantity"
+      FROM public."Orders"
+      LEFT JOIN "Requirement" ON "Requirement"."Id" = "Orders"."RequirementId"
+      LEFT JOIN "Camp_Data" ON "Requirement"."CampId" = "Camp_Data"."Id"
+      LEFT JOIN "Items" ON "Requirement"."ItemId" = "Items"."Id"
+      WHERE "Orders"."Id" = $1`,
       [id]
     );
     if (result.rows.length > 0) {

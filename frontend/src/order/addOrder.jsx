@@ -17,7 +17,8 @@ export default function AddOrderForm() {
   });
 
   const [requirement, setRequirement] = useState({
-    RequirementDescription: '',
+    
+    RequirementName: '',
     CampName: '',
     RequiredQuantity: '',
     AchievedQuantity: ''
@@ -34,7 +35,15 @@ export default function AddOrderForm() {
           setOrder({
             Id: id,
             Quantity: order.Quantity,
-          });
+          })
+          setRequirement({
+            RequirementName: order.RequirementName,
+            CampName: order.CampName,
+            RequiredQuantity: order.RequiredQuantity,
+            AchievedQuantity: order.AchievedQuantity
+          })
+
+          ;
         } catch (error) {
           console.error("Error fetching order:", error);
         }
@@ -47,7 +56,7 @@ export default function AddOrderForm() {
         try {
           const requirement = await getRequirementById(reqid);
           setRequirement({
-            RequirementDescription: requirement.Description,
+            RequirementName: requirement.Name,
             CampName: requirement.CampName,
             RequiredQuantity: requirement.RequiredQuantity,
             AchievedQuantity: requirement.AchievedQuantity
@@ -97,7 +106,7 @@ export default function AddOrderForm() {
     <div className={styles.formContainer}>
       <h2>{isEditMode ? "Update Order" : "Add Order"}</h2>
       <div className={styles.requirementDetails}>
-        <p><strong>Requirement:</strong> {requirement.RequirementDescription}</p>
+        <p><strong>Requirement:</strong> {requirement.RequirementName}</p>
         <p><strong>Required Quantity:</strong> {requirement.RequiredQuantity}</p>
         <p><strong>Achieved Quantity:</strong> {requirement.AchievedQuantity}</p>
         <p><strong>Camp:</strong> {requirement.CampName}</p>
