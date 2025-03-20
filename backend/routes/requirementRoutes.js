@@ -8,10 +8,10 @@ const authMiddleware = require('../middlewares/authMiddlware');
 
 const router = express.Router();
 
-router.get('/',authMiddleware ,requirementController.getRequirements);
+router.get('/' ,requirementController.getRequirements);
 router.get('/:id', requirementController.getRequirementById);
-router.post('/', validate(requirementSchema),requirementController.createRequirements);
-router.put('/',validate(updateRequirementSchema),requirementController.updateRequirement);
+router.post('/',requirementController.createRequirements);
+router.put('/',requirementController.updateRequirement);
 router.delete('/',requirementController.deleteRequirement);
 
 module.exports = router;

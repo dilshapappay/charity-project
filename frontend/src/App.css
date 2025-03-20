@@ -34,3 +34,21 @@
     transform: rotate(360deg);
   }
 }
+
+.no-data-table{
+  text-align: center;
+  color: red;
+}
+
+/* Status colors */
+.status-pending {
+  color: orange;
+}
+
+.status-completed {
+  color: green;
+}
+
+.status-cancelled {
+  color: red;
+}

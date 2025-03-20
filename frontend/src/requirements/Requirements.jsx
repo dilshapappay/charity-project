@@ -18,14 +18,13 @@ export default function Requirements() {
   const navigate = useNavigate();
 
   const fetchRequirements = async () => {
-    const response = await getRequirements("","",page,limit);
+    const response = await getRequirements("", "", page, limit);
     console.log(response);
     setRequirements(response.data);
     setTotalPages(response.totalPages);
   };
 
   useEffect(() => {
-    debugger
     fetchRequirements(page, limit);
   }, [page, limit]);
 
@@ -79,11 +78,18 @@ export default function Requirements() {
             <th>Status</th>
             <th>Required Quantity</th>
             <th>Achieved Quantity</th>
+            <th>Image</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {requirements.map((requirement, index) => (
+          {requirements.length == 0 && (
+            <tr>
+              <td colSpan={8} className='no-data-table'>No data found!!!</td>
+            </tr>
+          )}
+
+          {requirements.length > 0 && requirements.map((requirement, index) => (
             <tr key={requirement.id}>
               <td>{index + 1}</td>
               <td>{requirement.Name}</td>
@@ -92,6 +98,13 @@ export default function Requirements() {
               <td>{OrderStatus[Number(requirement.StatusId)]}</td>
               <td>{requirement.RequiredQuantity}</td>
               <td>{requirement.AchievedQuantity}</td>
+              <td>
+                <img
+                  src={requirement.ImageURL}
+                  alt=""
+                  className={styles.images}
+                />
+              </td>
 
               <td>
                 <div className={styles.actionIcons}>

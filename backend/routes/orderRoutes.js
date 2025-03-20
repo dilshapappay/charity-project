@@ -7,13 +7,11 @@ const authMiddleware = require('../middlewares/authMiddlware');
 
 const router = express.Router();
 
-router.get('/',authMiddleware, orderController.getOrders);
+router.get('/', authMiddleware, orderController.getOrders);
 router.get('/:id', orderController.getOrderById);
 
-router.post('/',validate(orderSchema),orderController.createOrder);
-router.put('/', validate(updateOrderSchema),orderController.updateOrder);
+router.post('/', authMiddleware, validate(orderSchema), orderController.createOrder);
+router.put('/', authMiddleware, validate(updateOrderSchema), orderController.updateOrder);
 router.delete('/', orderController.deleteOrder);
-
-
 
 module.exports = router;

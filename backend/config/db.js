@@ -13,7 +13,7 @@ dbClient.connect((err, client) => {
     if (err) {
         console.log("connection error", err.stack)
     } else {
-        console.log("Connected")
+        console.log("Connected");
     }
 })
 module.exports = dbClient;

@@ -3,33 +3,27 @@ import { getUsers, deleteUser } from "../services/userService";
 import { Link } from "react-router-dom";
 
 import styles from "./users.module.css";
-import AddUserForm from "./addUser";
 
 import { useNavigate } from "react-router-dom";
-
+import { getRoleName } from "../enums/Role";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const limit = 10;
   const [totalPages, setTotalPages] = useState(1);
-  const [showForm, setShowForm] = useState(false);
   const navigate = useNavigate();
 
-
   const fetchUsers = async function () {
-      const response = await getUsers(page, limit);
-            setUsers(response.data);
-            setTotalPages(response.totalPages);
+    const response = await getUsers(page, limit);
+    setUsers(response.data);
+    setTotalPages(response.totalPages);
   };
 
   useEffect(() => {
     fetchUsers(page, limit);
   }, [page, limit]);
 
-  const handleAddClick = () => {
-    setShowForm(true);
-  };
   const handleDeleteClick = async (Id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
@@ -37,7 +31,6 @@ export default function Users() {
         alert(result.message);
         fetchUsers();
       } catch (error) {
-        debugger
         alert(error.message);
       }
     }
@@ -45,27 +38,26 @@ export default function Users() {
 
   const handleEditClick = (id) => {
     navigate(`/main/editUser/${id}`);
-};
+  };
 
-const handleNextPage = () => {
-  if (page < totalPages) {
-    setPage(page + 1);
-  }
-};
+  const handleNextPage = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
 
-const handlePreviousPage = () => {
-  if (page > 1) {
-    setPage(page - 1);
-  }
-};
+  const handlePreviousPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
   return (
     <div className={styles.tableContainer}>
       <h2>User Details</h2>
       <Link to="/main/addUser">
-        <button className={styles.addButton} onClick={handleAddClick}>
+        <button className={styles.addButton}>
           +Add
         </button>
-        {showForm && <AddUserForm />}
       </Link>
 
       <table>
@@ -80,13 +72,18 @@ const handlePreviousPage = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user, index) => (
+          {users.length == 0 && (
+            <tr>
+              <td colSpan={6} className='no-data-table'>No data found!!!</td>
+            </tr>
+          )}
+          {users.length > 0 && users.map((user, index) => (
             <tr key={user.Id}>
               <td>{index + 1}</td>
               <td>{`${user.FirstName} ${user.LastName}`}</td>
               <td>{user.Email}</td>
-            
-              <td>{user.RoleName}</td>
+
+              <td>{getRoleName(user.RoleId)}</td>
               <td>{user.Address}</td>
               <td>
                 {" "}
@@ -105,11 +102,11 @@ const handlePreviousPage = () => {
           ))}
         </tbody>
       </table>
-       <div className={styles.pagination}>
-              <button onClick={handlePreviousPage} disabled={page === 1}>Previous</button>
-              <span>Page {page} of {totalPages}</span>
-              <button onClick={handleNextPage} disabled={page === totalPages}>Next</button>
-            </div>
+      <div className={styles.pagination}>
+        <button onClick={handlePreviousPage} disabled={page === 1}>Previous</button>
+        <span>Page {page} of {totalPages}</span>
+        <button onClick={handleNextPage} disabled={page === totalPages}>Next</button>
+      </div>
     </div>
   );
 }

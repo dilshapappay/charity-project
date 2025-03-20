@@ -45,7 +45,7 @@ export default function Welcome() {
                     </ul>
                 </nav>
                 <div class="image-container">
-                    <img src="photos/donation.png" alt="Donation Image" />
+                    <img src="photos/welcome pic.jpg" alt="Donation Image" />
                 </div>
             </div>
         </div>

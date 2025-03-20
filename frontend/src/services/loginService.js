@@ -15,3 +15,11 @@ export async function register(firstName, lastName, email, password) {
     includeToken: false
   });
 }
+
+export async function changePassword(currentPassword, newPassword) {
+  return apiClient('/account/change-password', {
+    method: 'POST',
+    body: { currentPassword, newPassword },
+    includeToken: true
+  });
+}

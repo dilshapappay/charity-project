@@ -17,10 +17,12 @@ import AddCampForm from "./camps/addCamp";
 import Volunteers from "./volunteers/volunteers";
 import AddVolunteerForm from "./volunteers/addVolunteer";
 import Orders from "./order/order";
-import UpdateOrderForm from "./order/updateOrder";
+import Dashboard from "./dashboard/Dashboard";
 import { AuthProvider } from "./Auth/AuthContext";
 import ProtectedRoute
  from "./Auth/ProtectedRoute";
+import AddOrderForm from "./order/addOrder";
+import ChangePassword from "./ChangePassword/ChangePassword";
 function App() {
   return (
     <div className="App">
@@ -37,6 +39,8 @@ function App() {
 
             <Route element={<ProtectedRoute/>}>
               <Route path="/main" element={<Main/>}>
+              <Route path="" element={<Dashboard />} />
+              <Route path="dashboard" element={<Dashboard />} />
               <Route path="users" element={<Users />} />
               <Route path="addUser" element={<AddUserForm />} />
               <Route path="editUser/:id" element={<AddUserForm />} />
@@ -61,7 +65,10 @@ function App() {
               <Route path="editVolunteer/:id" element={<AddVolunteerForm />} />
 
               <Route path="orders" element={<Orders />} />
-              <Route path="updateOrder/:id" element={<UpdateOrderForm />} />
+              <Route path="addorder" element={<AddOrderForm />} />
+              <Route path="updateOrder/:id" element={<AddOrderForm />} />
+
+              <Route path="change-password" element={<ChangePassword></ChangePassword>}></Route>
             </Route>
             </Route>
           </Routes>

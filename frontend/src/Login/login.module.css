@@ -12,10 +12,15 @@
 .loginPage{
     background-color:rgb(253, 217, 178,0.85) ;
 
-    padding: 30px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+
+    
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
+    max-width: 450px;
     width: 100%;
     text-align: center;
   }
@@ -58,6 +63,7 @@
   }
  
   .loginButton {
+    margin-bottom: 20px;
     margin-left:12px;
     padding: 10px 76px;
     background-color: #2d8144;
@@ -87,3 +93,10 @@
   i{
     color:#2d8144;
   }
+  .error{
+    color:red;
+margin-top:5px ;
+margin-bottom:5px ;
+  }
+ 
+  
