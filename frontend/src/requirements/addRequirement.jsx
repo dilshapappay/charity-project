@@ -21,6 +21,7 @@ export default function AddRequirementForm() {
   const [camps, setCamps] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
 
+   
   useEffect(() => {
     const fetchAllItems = async function () {
       try {
@@ -42,8 +43,9 @@ export default function AddRequirementForm() {
       }
     };
     fetchAllItems();
-  }, []);
-  useEffect(() => {
+
+
+
     const fetchAllCamps = async function () {
       try {
         let allCamps = [];

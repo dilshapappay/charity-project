@@ -78,6 +78,7 @@ export default function Requirements() {
             <th>Status</th>
             <th>Required Quantity</th>
             <th>Achieved Quantity</th>
+            <th>Image</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -97,6 +98,13 @@ export default function Requirements() {
               <td>{OrderStatus[Number(requirement.StatusId)]}</td>
               <td>{requirement.RequiredQuantity}</td>
               <td>{requirement.AchievedQuantity}</td>
+              <td>
+                <img
+                  src={requirement.ImageURL}
+                  alt=""
+                  className={styles.images}
+                />
+              </td>
 
               <td>
                 <div className={styles.actionIcons}>

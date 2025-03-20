@@ -73,21 +73,7 @@ exports.getRequirementById = async (req, res) => {
 
   try {
     const result = await dbClient.query(
-      `SELECT 
-      public."Requirement"."Id",
-      public."Items"."Name" AS "ItemName",
-      public."Items"."Description",
-      public."Requirement"."RequiredQuantity",
-      public."Requirement"."AchievedQuantity",
-      public."Camp_Data"."Name" AS CampName,
-      public."Camp_Data"."District",
-      public."Requirement"."StatusId",
-      public."Requirement"."ImageURL"
-      FROM "Requirement" 
-      JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id"
-      JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"
-      WHERE public."Requirement"."IsDeleted" = false
-      AND public."Requirement"."Id" = $1`,
+      'SELECT * FROM public."Requirement" WHERE "Id" = $1',
       [id]
     );
 
@@ -154,10 +140,10 @@ exports.updateRequirement = async (req, res) => {
 
     try {
       const result = await dbClient.query(
-        'UPDATE "Requirement" SET "ItemId" = $2, "CampId" = $3, "StatusId" = $4, "RequiredQuantity" = $5, "AchievedQuantity" = $6, "ImageURL" = $7 WHERE "Id" = $1 RETURNING *',
+        'UPDATE public."Requirement" SET "ItemId" = $2, "CampId" = $3, "StatusId" = $4, "RequiredQuantity" = $5, "AchievedQuantity" = $6, "ImageURL" = $7 WHERE "Id" = $1 RETURNING *',
         [
           Id,
-          ItemId,
+          ItemId, 
           CampId,
           StatusId,
           RequiredQuantity,
