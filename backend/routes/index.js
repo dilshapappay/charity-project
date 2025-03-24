@@ -9,7 +9,10 @@ const requirementRoutes = require('./requirementRoutes');
 const orderRoutes=require('./orderRoutes');
 const volunteerRoutes=require('./volunteerRoutes');
 const accountRoutes = require('./accountRoutes');
+const dashboardRoutes = require('./dashboardRoutes');
  
+
+
 
 router.use('/users', userRoutes);
 router.use('/items',itemsRoutes);
@@ -19,5 +22,6 @@ router.use('/requirements',requirementRoutes);
 router.use('/orders', orderRoutes);
 router.use('/volunteers',volunteerRoutes);
 router.use('/account', accountRoutes);
+router.use('/dashboard',dashboardRoutes);
 
 module.exports = router;

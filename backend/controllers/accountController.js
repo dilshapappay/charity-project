@@ -33,7 +33,7 @@ exports.register = async (req, res) => {
 
     if (result.rows.length > 0) {
       return res.status(400).json({ errors: [{ msg: 'Email already exists' }] });
-    }
+    }  
 
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);

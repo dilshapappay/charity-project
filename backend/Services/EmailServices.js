@@ -16,6 +16,8 @@ const transporter = nodemailer.createTransport({
       text: `Your account has been created. Your password is: ${password}`
     };
   
+
+  
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
@@ -25,4 +27,39 @@ const transporter = nodemailer.createTransport({
     });
   };
 
-  module.exports = sendPasswordEmail;
+  const sendOrderEmail = (to, RequirementName, LocationAddress) => {
+    const mailOptions = {
+        from: 'your-email@gmail.com',
+        to: to,
+        subject: 'Order Approved',
+        text: `Your order for "${RequirementName}" at "${LocationAddress}" has been approved successfully.`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error sending order email:', error);
+        } else {
+            console.log('Order email sent: ' + info.response);
+        }
+    });
+};
+
+const sentRejectOrderEmail = (to, RequirementName, LocationAddress) => {
+    const mailOptions = {
+        from: 'your-email@gmail.com',
+        to: to,
+        subject: 'Order Rejected',
+        text: `Your order for "${RequirementName}" at "${LocationAddress}" has been rejected.`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error sending reject order email:', error);
+        } else {
+            console.log('Reject order email sent: ' + info.response);
+        }
+    });
+};
+
+// ✅ Correct way to export multiple functions
+module.exports = { sendPasswordEmail, sendOrderEmail, sentRejectOrderEmail };

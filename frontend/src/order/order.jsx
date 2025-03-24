@@ -3,7 +3,9 @@ import styles from './order.module.css';
 import { getOrders, deleteOrder } from "../services/orderService";
 import { useNavigate } from 'react-router-dom';
 import OrderStatus from "../orderStatus";
-import { Link } from "react-router-dom";
+import {Role} from '../enums/Role';
+import {approveOrder,rejectOrder} from '../services/orderService';
+
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
@@ -11,6 +13,9 @@ export default function Orders() {
   const limit = 10;
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
+  const [selectedStatus, setSelectedStatus] = useState(""); // State for selected status
+
+  const userRole = localStorage.getItem('role');
 
   const fetchOrders = async function () {
     try {
@@ -39,10 +44,44 @@ export default function Orders() {
       }
     }
   };
+  const handleApproveClick = async (id) => {
+    if (window.confirm('Are you sure you want to approve this order?')) {
+      try {
+        const result = await approveOrder(id); 
+        alert(result.message);
+        fetchOrders(); 
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+  };
+  
+  
+  const handleRejectClick = async (id) => {
+    if (window.confirm('Are you sure you want to reject this order?')) {
+      try {
+        const result = await rejectOrder(id); // ✅ Use result directly (already parsed)
+        alert(result.message);
+        fetchOrders(); 
+      } catch (error) {
+        alert(error.message);
 
+      }
+    }
+  };
+  
+ 
   const handleEditClick = (Id) => {
     navigate(`/main/updateOrder/${Id}`);
   };
+
+  const handleStatusFilterChange = (e) => {
+    setSelectedStatus(e.target.value); // Update selected status
+  };
+
+  const filteredOrders = selectedStatus
+    ? orders.filter((order) => Number(order.StatusId) === Number(selectedStatus))
+    : orders;
 
   const handleNextPage = () => {
     if (page < totalPages) {
@@ -72,40 +111,66 @@ export default function Orders() {
   return (
     <div className={styles.tableContainer}>
       <h2>Order Details</h2>
-      {/* <Link to="/main/addOrder">
-        <button className={styles.addButton}>
-          +Add
-        </button>
-      </Link> */}
+
+      <div className={styles.filterContainer}>
+        <select className="filter" value={selectedStatus} onChange={handleStatusFilterChange}>
+          <option value="">Select Status</option>
+          {Object.entries(OrderStatus).map(([key, value]) => (
+            <option key={key} value={key}>{value}</option>
+          ))}
+        </select>
+      </div>
 
       <table>
         <thead>
           <tr>
             <th>Sl</th>
-            <th>customer</th>
+            <th>Customer</th>
             <th>Product Name</th>
             <th>Status</th>
             <th>Quantity</th>
-            <th>Action</th>
+            {(userRole == Role.Master || userRole == Role["Camp Admin"]) && <th>Approve/Reject</th>}
+           <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {orders.length > 0 && orders.map((order, index) => (
+          {filteredOrders.length > 0 && filteredOrders.map((order, index) => (
             <tr key={order.Id}>
               <td>{index + 1}</td>
-              <td>{`${order.FirstName} ${order.LastName}`}</td >
+              <td>{`${order.FirstName} ${order.LastName}`}</td>
               <td>{order.ProductName}</td>
               <td className={getStatusClass(order.StatusId)}>{OrderStatus[Number(order.StatusId)]}</td>
               <td>{order.Quantity}</td>
-              <td>  <div className={styles.actionIcons}>
-                <i className="material-icons" onClick={() => handleEditClick(order.Id)} >edit</i>
-                <i className="material-icons" onClick={() => handleDeleteClick(order.Id)} >delete</i>
-              </div></td>
+              {(userRole == Role.Master || userRole == Role['Camp Admin']) && (
+                <td>
+                  <div className={styles.actionIcons}>
+                    {order.StatusId === 1 && (
+                      <>
+                        <button onClick={() => handleApproveClick(order.Id)}>Approve</button>
+                        <button onClick={() => handleRejectClick(order.Id)}>Reject</button>
+                      </>
+                    )}
+                  </div>
+                </td>
+              )}
+              <td>
+                <div className={styles.actionIcons}>
+                
+                  <i className="material-icons" onClick={() => handleEditClick(order.Id)}>edit</i>
+                  <i className="material-icons" onClick={() => handleDeleteClick(order.Id)}>delete</i>
+                </div>
+              </td>
+            
             </tr>
           ))}
-          {orders.length==0 &&(<tr><td colSpan={6} className='no-data-table'>No data found!!!</td></tr>)}
+          {filteredOrders.length === 0 && (
+            <tr>
+              <td colSpan={6} className="no-data-table">No data found!!!</td>
+            </tr>
+          )}
         </tbody>
       </table>
+
       <div className={styles.pagination}>
         <button onClick={handlePreviousPage} disabled={page === 1}>Previous</button>
         <span>Page {page} of {totalPages}</span>

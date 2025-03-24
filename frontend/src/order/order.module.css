@@ -2,6 +2,9 @@
   color: #2d8144;
   cursor: pointer;
 }
+.actionIcons button{
+margin-right: 20px;
+}
 
 .addButton {
   background-color: #2d8144;
@@ -17,6 +20,19 @@
 .addButton:hover {
   background-color: #236832;
 }
+.filterContainer {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content:end;
+  align-items: center;
+  gap: 10px;
+}
+.filterContainer input, .filterContainer select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
 
 .pagination {
   display: flex;

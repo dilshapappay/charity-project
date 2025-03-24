@@ -1,6 +1,8 @@
 const dbClient = require('../config/db');
 const OrderStatus = require('../config/orderStatus');
 const Role = require('../config/Role');
+const { sendOrderEmail, sentRejectOrderEmail } = require('../Services/EmailServices');
+
 
 exports.getOrders = async (req, res) => {
   const user = req.user;
@@ -64,6 +66,8 @@ exports.getOrders = async (req, res) => {
     const totalResult = await dbClient.query(countQuery, countParams);
     const totalItems = parseInt(totalResult.rows[0].count); // Get the total count of orders
 
+
+    
     res.json({
       page,
       limit,
@@ -79,15 +83,15 @@ exports.getOrders = async (req, res) => {
 exports.getOrderById = async (req, res) => {
   const { id } = req.params;
   try {
-const result = await dbClient.query(`SELECT "Orders".*, 
-             "Items"."Name" AS "RequirementName", 
-             "Camp_Data"."Name" AS "CampName", 
-             "Requirement"."AchievedQuantity", 
-             "Requirement"."RequiredQuantity"
+const result = await dbClient.query(`SELECT public."Orders".*, public."User"."Email",
+              public."Items"."Name" AS "RequirementName",
+              public."Camp_Data"."LocationAddress"
       FROM public."Orders"
+      LEFT JOIN public."User" ON public."Orders"."UserId" = public."User"."Id"
       LEFT JOIN "Requirement" ON "Requirement"."Id" = "Orders"."RequirementId"
-      LEFT JOIN "Camp_Data" ON "Requirement"."CampId" = "Camp_Data"."Id"
-      LEFT JOIN "Items" ON "Requirement"."ItemId" = "Items"."Id"
+      LEFT JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id"
+	        LEFT JOIN "Items" ON "Requirement"."ItemId" = "Items"."Id"
+
       WHERE "Orders"."Id" = $1`,
       [id]
     );
@@ -137,6 +141,7 @@ exports.updateOrder = async (req, res) => {
   }
 }
 
+
 exports.deleteOrder = async (req, res) => {
   const { id } = req.body;
   try {
@@ -150,3 +155,92 @@ exports.deleteOrder = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete Order' });
   }
 };
+
+
+exports.approveOrder = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const orderResult = await dbClient.query(
+      `SELECT public."Orders".*, public."User"."Email",
+              public."Items"."Name" AS "RequirementName",
+              public."Camp_Data"."LocationAddress"
+      FROM public."Orders"
+      LEFT JOIN public."User" ON public."Orders"."UserId" = public."User"."Id"
+      LEFT JOIN "Requirement" ON "Requirement"."Id" = "Orders"."RequirementId"
+      LEFT JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id"
+	        LEFT JOIN "Items" ON "Requirement"."ItemId" = "Items"."Id"
+      WHERE public."Orders"."Id" = $1`,
+      [id]
+    );
+
+    if (orderResult.rows.length === 0) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    const userEmail = orderResult.rows[0].Email; // Extract user email
+    const RequirementName = orderResult.rows[0].RequirementName;
+    const LocationAddress = orderResult.rows[0].LocationAddress;
+
+    await dbClient.query(
+      'UPDATE public."Orders" SET "StatusId" = $1 WHERE "Id" = $2',
+      [2, id] 
+    );
+    if (userEmail) {
+      sendOrderEmail(userEmail,RequirementName,LocationAddress);
+    } else {
+      console.warn(`Email not found for order ID: ${id}`);
+    }
+    res.status(200).json({ message: 'Order approved successfully' });
+  } catch (error) {
+    console.error('Error approving order:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+exports.rejectOrder = async (req, res) => {
+  const { id } = req. params;
+
+  try {
+    const orderResult = await dbClient.query(
+      `
+	  SELECT public."Orders".*, public."User"."Email" ,
+  
+         public."Items"."Name" AS "RequirementName",
+              public."Camp_Data"."LocationAddress"
+    FROM public."Orders"
+      LEFT JOIN public."User" ON public."Orders"."UserId" = public."User"."Id"
+  LEFT JOIN "Requirement" ON "Requirement"."Id" = "Orders"."RequirementId"
+      LEFT JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id"
+	        LEFT JOIN "Items" ON "Requirement"."ItemId" = "Items"."Id"
+                WHERE public."Orders"."Id" = $1`,
+      [id]
+    );
+
+    if (orderResult.rows.length === 0) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    const userEmail = orderResult.rows[0].Email; 
+    const RequirementName = orderResult.rows[0].RequirementName;
+    const campAddress = orderResult.rows[0].CampAddress;   const requirementName = orderResult.rows[0].RequirementName;
+    await dbClient.query(
+      'UPDATE public."Orders" SET "StatusId" = $1 WHERE "Id" = $2',
+      [4, id] 
+    );
+
+    if (userEmail) {
+
+      sentRejectOrderEmail(userEmail, RequirementName, campAddress);
+    }
+    else {
+      console.warn(`Email not found for order ID: ${id}`);
+    }
+
+    res.status(200).json({ message: 'Order rejected successfully' });
+  } catch (error) {
+    console.error('Error rejecting order:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+

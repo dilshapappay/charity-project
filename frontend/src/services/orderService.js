@@ -28,3 +28,15 @@ export function deleteOrder(id) {
     body: { id }
   });
 }
+
+export function approveOrder(id) {
+  return apiClient(`/Orders/approve/${id}`, {
+    method: 'PUT'
+  });
+}
+
+export function rejectOrder(id) {
+  return apiClient(`/Orders/reject/${id}`, {
+    method: 'PUT'
+  });
+}
