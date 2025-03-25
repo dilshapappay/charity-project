@@ -40,3 +40,9 @@ export function rejectOrder(id) {
     method: 'PUT'
   });
 }
+
+export function markAsReceived(id) {
+  return apiClient(`/Orders/received/${id}`, {
+    method: 'PUT'
+  });
+}

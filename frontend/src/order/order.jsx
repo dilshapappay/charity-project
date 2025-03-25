@@ -4,6 +4,8 @@ import { getOrders, deleteOrder } from "../services/orderService";
 import { useNavigate } from 'react-router-dom';
 import OrderStatus from "../orderStatus";
 import {Role} from '../enums/Role';
+import {markAsReceived} from '../services/orderService';
+
 import {approveOrder,rejectOrder} from '../services/orderService';
 
 
@@ -70,7 +72,19 @@ export default function Orders() {
     }
   };
   
- 
+
+
+   const handleReceivedClick = async (id) => {
+    if (window.confirm('Have you received this order?')) {
+      try {
+        const result = await markAsReceived(id); // Update status to "Completed"
+        alert(result.message);
+        fetchOrders();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+  };
   const handleEditClick = (Id) => {
     navigate(`/main/updateOrder/${Id}`);
   };
@@ -146,10 +160,17 @@ export default function Orders() {
                   <div className={styles.actionIcons}>
                     {order.StatusId === 1 && (
                       <>
+                      
                         <button onClick={() => handleApproveClick(order.Id)}>Approve</button>
                         <button onClick={() => handleRejectClick(order.Id)}>Reject</button>
                       </>
                     )}
+                     {order.StatusId === 2 && (
+                    <button onClick={() => handleReceivedClick(order.Id)} className={styles.receivedButton}>
+                      Received
+                    </button>
+                  )}
+                    
                   </div>
                 </td>
               )}
@@ -159,6 +180,8 @@ export default function Orders() {
                   <i className="material-icons" onClick={() => handleEditClick(order.Id)}>edit</i>
                   <i className="material-icons" onClick={() => handleDeleteClick(order.Id)}>delete</i>
                 </div>
+
+               
               </td>
             
             </tr>

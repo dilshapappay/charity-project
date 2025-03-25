@@ -16,6 +16,7 @@ router.delete('/', orderController.deleteOrder);
 
 router.put('/approve/:id',  orderController.approveOrder);
 router.put('/reject/:id',  orderController.rejectOrder);
+router.put('/received/:id', orderController.markAsReceived);
 
 
 module.exports = router;

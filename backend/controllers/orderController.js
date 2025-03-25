@@ -271,3 +271,20 @@ exports.rejectOrder = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+exports.markAsReceived = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await dbClient.query(
+      'UPDATE public."Orders" SET "StatusId" = $1 WHERE "Id" = $2',
+      [3, id]
+    );
+    res.status(200).json({ message: "Order marked as received successfully" });
+  } catch (error) {
+    console.error("Error marking order as received:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
