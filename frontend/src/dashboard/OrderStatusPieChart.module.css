@@ -1,6 +1,13 @@
 .chartContainer {
-    width: 400px;
-    margin: 20px auto;
+  margin-top: 50px;
+    width: 350px;
     text-align: center;
+    margin-left: 40px;
   }
   
+  h3{
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+    margin-top: 15px;
+  }

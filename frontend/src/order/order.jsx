@@ -60,7 +60,7 @@ export default function Orders() {
   const handleRejectClick = async (id) => {
     if (window.confirm('Are you sure you want to reject this order?')) {
       try {
-        const result = await rejectOrder(id); // ✅ Use result directly (already parsed)
+        const result = await rejectOrder(id); 
         alert(result.message);
         fetchOrders(); 
       } catch (error) {

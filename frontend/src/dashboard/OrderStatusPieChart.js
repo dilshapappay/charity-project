@@ -6,8 +6,9 @@ import styles from './OrderStatusPieChart.module.css'; // Optional: your styling
 const OrderStatusPieChart = ({ pieChartData }) => {
   return (
     <div className={styles.chartContainer}>
-      <h3>Order Status Distribution</h3>
+    
       <Pie data={pieChartData} />
+      <h3>Order Status Distribution</h3>
     </div>
   );
 };

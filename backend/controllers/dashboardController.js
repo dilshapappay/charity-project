@@ -21,22 +21,41 @@ exports.getDashboardData = async (req, res) => {
     }
 }
 
-
 exports.getOrderStatusData = async (req, res) => {
-
     try {
-        const pending = await dbClient.query('SELECT COUNT(*) FROM public."Orders" WHERE "Status" = $1 AND "IsDeleted" = false', ['Pending']);
-        const approved = await dbClient.query('SELECT COUNT(*) FROM public."Orders" WHERE "Status" = $1 AND "IsDeleted" = false', ['Approved']);
-        const rejected = await dbClient.query('SELECT COUNT(*) FROM public."Orders" WHERE "Status" = $1 AND "IsDeleted" = false', ['Rejected']);
-        const completed = await dbClient.query('SELECT COUNT(*) FROM public."Orders" WHERE "Status" = $1 AND "IsDeleted" = false', ['Completed']);
+        const pending = await dbClient.query('SELECT COUNT(*) FROM public."Orders" WHERE "StatusId" = $1 AND "IsDeleted" = false', ['1']);
+        const processing = await dbClient.query('SELECT COUNT(*) FROM public."Orders" WHERE "StatusId" = $1 AND "IsDeleted" = false', ['2']);
+        const completed = await dbClient.query('SELECT COUNT(*) FROM public."Orders" WHERE "StatusId" = $1 AND "IsDeleted" = false', ['3']);
+        const cancelled = await dbClient.query('SELECT COUNT(*) FROM public."Orders" WHERE "StatusId" = $1 AND "IsDeleted" = false', ['4']);
 
         res.json({
             pending: parseInt(pending.rows[0].count),
-            approved: parseInt(approved.rows[0].count),
-            rejected: parseInt(rejected.rows[0].count),
-            completed: parseInt(completed.rows[0].count)
+            processing: parseInt(processing.rows[0].count), 
+            completed: parseInt(completed.rows[0].count),   
+            cancelled: parseInt(cancelled.rows[0].count)    
         });
     } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
+exports.getQuantityData = async (req, res) => {
+    try{
+        const quantityData = await dbClient.query(`SELECT 
+        "Camp_Data"."District",
+        SUM("Requirement"."RequiredQuantity") AS TotalRequiredQuantity,
+        SUM("Requirement"."AchievedQuantity") AS TotalAchievedQuantity
+    FROM public."Requirement"
+    JOIN public."Camp_Data" ON "Requirement"."CampId" = "Camp_Data"."Id"
+    WHERE "Requirement"."IsDeleted" = false
+    GROUP BY "Camp_Data"."District"
+    ORDER BY "Camp_Data"."District";`);
+
+        res.json(quantityData.rows);
+    }
+    catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }

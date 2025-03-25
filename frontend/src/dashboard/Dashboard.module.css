@@ -35,3 +35,35 @@
     color: #2d8144;
     transition: all 0.3s ease-in-out;
   }
+  
+  .mainChartSection {
+    display: flex;
+    justify-content: space-between; /* Space between charts */
+    align-items: center; /* Align items vertically */
+    gap: 20px; /* Spacing between charts */
+    padding: 20px;
+    flex-wrap: wrap; /* Ensures responsiveness on smaller screens */
+  }
+  
+  .chartSection {
+    flex: 1; /* Equal width */
+    max-width: 25%; /* Limit width */
+  }
+  .barChartSection {
+    flex:1;
+    max-width: 80%;
+    margin-right: 35px; 
+    margin-bottom: 0;/* Full width */
+  }
+  
+  @media (max-width: 768px) {
+    .mainChartSection {
+      flex-direction: column; /* Stack charts on smaller screens */
+      align-items: center;
+    }
+  
+    .chartSection, .barChartSection {
+      max-width: 100%; /* Full width on small screens */
+    }
+  }
+  

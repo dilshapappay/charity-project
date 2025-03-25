@@ -90,12 +90,13 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  const { Id, FirstName, LastName, RoleId, Password, Email, Address, Mobile } =
+  const { Id, FirstName, LastName, RoleId, Email, Address, Mobile } =
     req.body;
   try {
+    
     const result = await dbClient.query(
-      'UPDATE "User" SET "FirstName" = $2, "LastName" = $3, "RoleId" = $4, "Password" = $5, "Email" = $6, "Address" = $7, "Mobile" = $8, "UpdatedOn" = $9 WHERE "Id" = $1',
-      [Id, FirstName, LastName, RoleId, Password, Email, Address, Mobile, new Date().toDateString()]
+      'UPDATE "User" SET "FirstName" = $2, "LastName" = $3, "RoleId" = $4,  "Email" = $5, "Address" = $6, "Mobile" = $7, "UpdatedOn" = $8 WHERE "Id" = $1',
+      [Id, FirstName, LastName, RoleId, Email, Address, Mobile, new Date().toDateString()]
     );
     if (result.rowCount > 0) {
       res.json({ message: "User updated successfully" });

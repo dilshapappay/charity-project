@@ -110,6 +110,7 @@ export default function AddOrderForm() {
         <p><strong>Required Quantity:</strong> {requirement.RequiredQuantity}</p>
         <p><strong>Achieved Quantity:</strong> {requirement.AchievedQuantity}</p>
         <p><strong>Camp:</strong> {requirement.CampName}</p>
+        
       </div>
       <form onSubmit={handleSubmit}>
         <div className={styles.formGroup}>

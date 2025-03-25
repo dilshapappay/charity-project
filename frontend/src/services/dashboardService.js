@@ -11,10 +11,19 @@ export function getDashboard() {
 }
 
 export function getOrderStatusData() {
-  return apiClient('/status-counts', { method: 'GET' })
-    .then(response => response)
-    .catch(error => {
+  return apiClient('/dashboard/order-status', { method: 'GET' }) // Corrected API endpoint
+  .then(response => response)
+  .catch(error => {
       console.error('Error fetching order status data:', error);
       throw error;
-    });
+  });
+}
+
+export function getQuantityData() {
+  return apiClient('/dashboard/quantity', { method: 'GET' }) // Corrected API endpoint
+  .then(response => response)
+  .catch(error => {
+      console.error('Error fetching quantity data:', error);
+      throw error;
+  });
 }

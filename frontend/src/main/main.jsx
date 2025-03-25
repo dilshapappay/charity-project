@@ -59,6 +59,13 @@ function Main() {
                   </>
                 )
               }
+              {
+                userRole === Role["Volunteer"] && (
+                  <>
+                    <li><Link to="/main/orders">Orders</Link></li>
+                  </>
+                )
+              }
               {userRole == Role.Master && (
                 <>
                   <li><Link to="/main/users">Users</Link></li>
