@@ -67,3 +67,36 @@
     }
   }
   
+  .dashboardLayout {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .leftSection {
+    width: 40%; /* Takes 40% of the space */
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .rightSection {
+    width: 60%; /* Takes 60% of the space */
+  }
+  
+  .userOrderStatus h3 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .userOrderStatus ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+  }
+  
+  .userOrderStatus li {
+    font-size: 18px;
+    padding: 5px 0;
+  }
+  
