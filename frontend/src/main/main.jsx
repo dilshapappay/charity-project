@@ -26,6 +26,7 @@ function Main() {
           <i className="fas fa-search"></i>
           <input type="text" placeholder="Search" />
         </div>
+        <div>  <Link to="/our-needs">Our Needs</Link></div>
         <div className={styles.profile} onClick={toggleDropdown}>
           <img src="../photos/dave.jpg" alt="Profile Picture" />
           {dropdownOpen && (
