@@ -74,7 +74,6 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchQuantityData = async () => {
       try {
-        debugger;
         const data = await getQuantityData();
         console.log("Quantity Data:", data);
         setQuantityData(data);
@@ -82,8 +81,12 @@ const Dashboard = () => {
         console.error('Error fetching quantity data:', error);
       }
     };
-
-    fetchQuantityData();
+  
+    // Only fetch quantity data if the user is not a Normal User
+    const userRole = localStorage.getItem('role');
+    if (Number(userRole) !== Role["Normal User"]) {
+      fetchQuantityData();
+    }
   }, []);
 
 
