@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getDashboard, getOrderStatusData } from '../services/dashboardService';
+import { getDashboard, getOrderStatusData,getQuantityData } from '../services/dashboardService';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartTooltip, Legend as RechartLegend, ResponsiveContainer } from "recharts";
 
