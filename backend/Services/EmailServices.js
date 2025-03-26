@@ -61,5 +61,21 @@ const sentRejectOrderEmail = (to, RequirementName, LocationAddress) => {
     });
 };
 
-// ✅ Correct way to export multiple functions
-module.exports = { sendPasswordEmail, sendOrderEmail, sentRejectOrderEmail };
+const markAsReceivedEmail =(to, RequirementName, LocationAddress) => {
+  const mailOptions = {
+    from: 'your-email@gmail.com',
+    to: to,
+    subject: 'Order Received',
+    text: `Your order for "${RequirementName}" at "${LocationAddress}" has been received.`
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log('Error sending mark as received email:', error);
+    } else {
+      console.log('Mark as received email sent: ' + info.response);
+    }
+  });
+
+}
+
+module.exports = { sendPasswordEmail, sendOrderEmail, sentRejectOrderEmail, markAsReceivedEmail };

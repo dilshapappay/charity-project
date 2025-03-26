@@ -4,6 +4,7 @@ const Role = require("../config/Role");
 const {
   sendOrderEmail,
   sentRejectOrderEmail,
+  markAsReceivedEmail,
 } = require("../Services/EmailServices");
 
 exports.getOrders = async (req, res) => {
@@ -253,7 +254,6 @@ exports.rejectOrder = async (req, res) => {
     const userEmail = orderResult.rows[0].Email;
     const RequirementName = orderResult.rows[0].RequirementName;
     const campAddress = orderResult.rows[0].CampAddress;
-    const requirementName = orderResult.rows[0].RequirementName;
     await dbClient.query(
       'UPDATE public."Orders" SET "StatusId" = $1 WHERE "Id" = $2',
       [4, id]
@@ -274,18 +274,45 @@ exports.rejectOrder = async (req, res) => {
 
 
 exports.markAsReceived = async (req, res) => {
-  const { id } = req.params;
-
   try {
+    const { id } = req.params;
+
+    const orderResult = await dbClient.query(
+      `SELECT public."Orders".*, public."User"."Email",
+              public."Items"."Name" AS "RequirementName",
+              public."Camp_Data"."LocationAddress" AS "CampAddress"
+      FROM public."Orders"
+      LEFT JOIN public."User" ON public."Orders"."UserId" = public."User"."Id"
+      LEFT JOIN "Requirement" ON "Requirement"."Id" = "Orders"."RequirementId"
+      LEFT JOIN public."Camp_Data" ON public."Requirement"."CampId" = public."Camp_Data"."Id"
+      LEFT JOIN "Items" ON "Requirement"."ItemId" = "Items"."Id"
+      WHERE public."Orders"."Id" = $1`,
+      [id]
+    );
+
+    if (orderResult.rows.length === 0) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    const userEmail = orderResult.rows[0].Email;
+    const RequirementName = orderResult.rows[0].RequirementName;
+    const campAddress = orderResult.rows[0].CampAddress; // Fixed column name
+
     await dbClient.query(
       'UPDATE public."Orders" SET "StatusId" = $1 WHERE "Id" = $2',
       [3, id]
     );
-    res.status(200).json({ message: "Order marked as received successfully" });
+
+    if (userEmail) {
+      markAsReceivedEmail(userEmail, RequirementName, campAddress);
+    } else {
+      console.warn(`Email not found for order ID: ${id}`);
+    }
+
+    res.status(200).json({ message: "Order received successfully" });
   } catch (error) {
-    console.error("Error marking order as received:", error);
+    console.error("Error receiving order:", error);
     res.status(500).json({ message: "Internal server error" });
   }
-}
-  
-
+};
+0
