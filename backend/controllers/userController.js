@@ -10,20 +10,11 @@ exports.getUsers = async (req, res) => {
   const offset = (page - 1) * limit;
 
   try {
-    const result = await dbClient.query(`SELECT 
-    public."User"."Id",
-    public."User"."RoleId",
-    public."User"."FirstName",
-    public."User"."LastName",
-    public."User"."Email",
-    public."User"."Address",
-    public."User"."Mobile",
-    public."User"."Password"
-    FROM 
-    public."User" 
-    LIMIT $1 OFFSET $2`, [limit, offset])
 
-    const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."User"');
+    const result = await dbClient.query(`SELECT * FROM get_user_function($1, $2)`, [limit, offset]);
+    
+
+    const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."User" WHERE "IsDeleted" = FALSE');
     const totalItems = parseInt(totalResult.rows[0].count);
     res.json({
       page,

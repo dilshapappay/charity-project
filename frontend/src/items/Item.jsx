@@ -81,13 +81,14 @@ export default function Items() {
           {items.length > 0 && items.map((item, index) => (
             <tr key={item.id}>
               <td>{index + 1}</td>
-              <td>{item.Name}</td>
-              <td>{item.Description}</td>
+              <td>{item.name}</td>
+              <td>{item.description}</td>
+
               <td>
                 <div className={styles.actionIcons}>
-                  <i className="material-icons" onClick={() => handleEditClick(item.Id)}>edit</i>
+                  <i className="material-icons" onClick={() => handleEditClick(item.id)}>edit</i>
                   <i className="material-icons"
-                    onClick={() => handleDeleteClick(item.Id)} >delete</i>
+                    onClick={() => handleDeleteClick(item.id)} >delete</i>
                 </div>
               </td>
             </tr>

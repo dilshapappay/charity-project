@@ -14,17 +14,9 @@ exports.getOrders = async (req, res) => {
   const offset = (page - 1) * limit;
 
   try {
-    let query = `
-      SELECT public."Orders"."Id", public."User"."FirstName", public."User"."LastName",
-             public."Items"."Name" AS "ProductName",
-              public."Orders"."StatusId",
-             public."Orders"."Quantity"
-      FROM public."Orders"
-      LEFT JOIN public."User" ON public."Orders"."UserId" = public."User"."Id"
-      LEFT JOIN public."Requirement" ON public."Orders"."RequirementId" = public."Requirement"."Id"
-      LEFT JOIN public."Items" ON public."Requirement"."ItemId" = public."Items"."Id"
-      WHERE public."Orders"."IsDeleted" = false
-    `;
+    let query = `SELECT * FROM get_order_function($1, $2)`;
+       
+    
 
     let countQuery = `
       SELECT COUNT(*) 
@@ -315,4 +307,3 @@ exports.markAsReceived = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-0

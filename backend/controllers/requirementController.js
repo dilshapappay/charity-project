@@ -68,6 +68,7 @@ exports.getRequirements = async (req, res) => {
   }
 };
 
+
 exports.getRequirementById = async (req, res) => {
   const { id } = req.params;
 

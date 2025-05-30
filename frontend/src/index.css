@@ -1,99 +1,89 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  font-family: Rubik, sans-serif;
-  background-color: #f7caa1;
-  color: #333;
-  line-height: 1.6;
   margin: 0;
+  font-family: Arial, sans-serif;
+  color: #333;
+  scroll-behavior: smooth;
 }
 
+/* ===============================
+   CONTAINER (Landing Section)
+================================== */
 .container {
   display: flex;
+  flex-direction: row;
   width: 100%;
   height: 100vh;
-  margin: 0;
-  padding: 0;
-
 }
 
+/* ===============================
+   LEFT SECTION (Image + Navbar)
+================================== */
 .left-section {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  position: relative; 
+  position: relative;
   min-width: 300px;
-}
-
-.left-section nav {
-  width: 100%;
-  background-color: transparent; 
-  padding: 15px 0;
-  position: absolute; 
-  top: 0;
-  left: 0; 
-  z-index:10; 
-  text-align: center;
-}
-
-.left-section nav ul {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 50px;
-}
-
-.left-section nav ul li a {
-  text-decoration: none;
-  color: #ffffff; 
-  font-weight: bold;
-  font-size: 18px;
-  gap:20px;
-}
-
-.left-section nav ul li a:hover{
-  color:#ff7e5f;
-  text-decoration: underline;
-
-  border-radius: 30px;
-  padding:10px;
-}
-.left-section .image-container {
-  position: absolute; 
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
 }
- 
+
+.left-section .image-container {
+  width: 100%;
+  height: 100%;
+}
 
 .left-section .image-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  margin: 0;
-  padding: 0;
-}
-.left-section .image-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1; 
 }
 
+/* NAVIGATION inside image */
+.left-section nav {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  text-align: center;
+}
+
+#nav-links {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 0;
+  margin: 0;
+}
+
+#nav-links li a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 10px 15px;
+  border-radius: 6px;
+}
+
+#nav-links li a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ff7e5f;
+}
+
+/* Special Donate button in nav */
+.donatebutton {
+  background-color: #45a15f;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.donatebutton:hover {
+  background-color: #2fa14f;
+}
+
+/* ===============================
+   RIGHT SECTION (Text Content)
+================================== */
 .right-section {
   flex: 1;
   display: flex;
@@ -101,8 +91,9 @@ body {
   justify-content: center;
   align-items: flex-start;
   padding: 40px;
-  background-color: #f7caa1;
-  min-width:300px;
+  background: linear-gradient(120deg, #f7e8db, #f0d6ba, #FDD9B2, #f7ac73);
+  position: relative;
+  min-width: 300px;
 }
 
 .logo {
@@ -110,7 +101,9 @@ body {
   top: 20px;
   left: 20px;
   z-index: 15;
-  font-size: 10px;
+  font-size: 15px;
+  margin-top:-10px;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   
   font-weight: bold;
   background: linear-gradient(90deg, #1f502d,#2d8144,#ff7e5f, #feb47b);
@@ -123,7 +116,7 @@ body {
 }
 
 .main-section h1 {
-  font-size: 6.1rem;
+  font-size: 6.5rem;
   color: #333;
   margin-bottom: 30px;
   margin-left: 30px;
@@ -145,7 +138,7 @@ body {
 }
 
 .buttons {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   display: flex;
   gap: 25px;
   flex-wrap: wrap;
@@ -154,7 +147,7 @@ body {
 
 .donate-btn, .needs-btn {
   flex:1;
-   padding: 18px 70px;
+   padding: 18px 50px;
   font-size: 18px;
   font-weight: bold;
   border: none;
@@ -181,6 +174,18 @@ body {
   background-color: #FDD9B2;
   border: 2px solid white;
 }
+.donatebutton{
+  background-color: #45a15f;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+.donatebutton:hover{
+  background-color: #2fa14f;
+
+  text-decoration: none;
+}
+
 .customers {
   position: absolute;
   bottom: 0;
@@ -210,36 +215,180 @@ strong{
   color:#2d8144;
 }
 
-
-
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-  }
-
-  .buttons {
-    justify-content: center;
-  }
-
-  .customers {
-    justify-content: center;
-    text-align: center;
-  }
-
-  .main-section h1 {
-    font-size: 2.5rem;
-  }
-
-  .main-section .quote {
-    font-size: 16px;
-  }
-
-  .main-section .author {
-    font-size: 13px;
-  }
-
-  nav ul {
-    gap: 10px;
-  }
+/* ===============================
+   FEATURES SECTION
+================================== */
+.features {
+  text-align: center;
+  padding: 50px 30px;
+  background:#fdf3eb;
+  padding-bottom: 100px;
+}
+  .secondary-heading{
+  font-size:3rem;
+  color: #286439;
+  margin-bottom: 20px;
 }
 
+.features-description{
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 40px;
+ 
+  margin-left: auto;
+  margin-right: auto;
+}
+.heading-tertiary{
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+.feature-para{
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+.feature-boxes {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.feature {
+  background: #ffffff;
+  padding: 20px 50px;
+  width: 350px;
+  height:200px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* ===============================
+   About SECTION
+================================== */
+.story {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 50px 100px;
+
+ background:linear-gradient(120deg, #f7e8db,#f0d6ba,#FDD9B2, #f7ac73);}
+
+.story-image, .story-text {
+  flex: 1;
+  padding: 20px;
+  
+}
+.story-image img{
+  border-radius: 15px;
+  box-shadow: #ccc;
+}
+.mission {
+  background: #ffffff;
+  padding: 30px 30px;
+  border-radius: 15px;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+}
+i{
+  color: #2d8144;
+  font-size: 24px;
+
+}
+.columns {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+/* ===============================
+   CONTAct SECTION
+================================== */
+
+
+.contact {
+  background: #fdf3eb;
+  padding: 50px 90px;
+
+}
+
+
+.contact-container {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.contact-text{
+  margin-bottom: 40px;
+  margin-top: -50px;
+ 
+}
+.contact-info {
+  flex: 1;
+  text-align: left;
+  margin-top: 100px;
+  margin-left: -330px;
+  padding-right: 50px;
+
+  
+}
+.fa-phone,
+.fa-envelope{
+  color: #2d8144;
+  font-size: 20px;
+  margin-right: 10px;
+  padding: 15px 15px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.contact-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: -90px;  
+  gap: 15px;
+  background-color: #ffffff;
+  padding: 70px 70px;
+  width: 550px;
+  height: 300px;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding:15px;
+  border-radius: 5px;
+  
+  border: 1px solid #ccc;
+}
+
+.contact-form button {
+  background: green;
+  color: white;
+  padding: 20px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+.text{
+  font-size: 1rem;
+}
+
+/* ===============================
+   footer SECTION
+================================== */
+footer {
+  background: #222;
+  color: white;
+  text-align: center;
+  padding: 15px;
+} 

@@ -6,21 +6,7 @@ const dbClient = require('../config/db');
   const offset = (page - 1) * limit;
 
   try {
-    const result = await dbClient.query(`SELECT  
-    public."Camp_Volunteers"."Id",
-    public."User"."FirstName",
-    public."User"."LastName",
-    public."Camp_Data"."Name" AS "CampName"
-FROM 
-    public."Camp_Volunteers"
-LEFT JOIN 
-    public."User" 
-ON 
-    public."Camp_Volunteers"."UserId" = public."User"."Id"
-JOIN 
-    public."Camp_Data" 
-ON 
-    public."Camp_Volunteers"."CampId" = public."Camp_Data"."Id"  LIMIT $1 OFFSET $2`, [limit, offset]);
+    const result = await dbClient.query(`SELECT * FROM get_volunteer_function($1,$2)`, [limit, offset]);
 
     const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Camp_Volunteers"');
     const totalItems = parseInt(totalResult.rows[0].count);

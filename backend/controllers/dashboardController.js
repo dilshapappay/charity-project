@@ -124,7 +124,7 @@ exports.getOrderStatusData = async (req, res) => {
             }
         } else if (user.RoleId === Role["Volunteer"]) {
             const campResult = await dbClient.query(
-                `SELECT "CampId" FROM public."Camp_Volunteers" WHERE "VolunteerId" = $1`,
+                `SELECT "CampId" FROM public."Camp_Volunteers" WHERE  "Id" = $1`,
                 [user.Id]
             );
             const campIds = campResult.rows.map(row => row.CampId);

@@ -5,8 +5,10 @@ exports.getItems = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10; 
   const offset = (page - 1) * limit;
   try {
-    const result = await dbClient.query(`SELECT * FROM public."Items" WHERE "IsDeleted" = false LIMIT $1 OFFSET $2`, [limit, offset]);
-    const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Items"');
+ 
+ 
+ const result = await dbClient.query(`SELECT * FROM get_items_function($1, $2)`, [limit, offset]);    
+ const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Items" WHERE "IsDeleted" = FALSE');
     const totalItems = parseInt(totalResult.rows[0].count);
     res.json({
       page,
@@ -19,7 +21,7 @@ exports.getItems = async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve Items' });
   }
 };
-
+ 
 
 exports.getItemById = async (req, res) => {
   const { id } = req.params;
@@ -43,8 +45,7 @@ exports.createItems = async (req, res) => {
   
     try {
       const result = await dbClient.query(
-        `INSERT INTO public."Items"("Name", "Description","CreatedOn","IsDeleted")
-      VALUES ($1, $2,$3,false) RETURNING *`,
+        `CALL create_item($1, $2, $3)`,
         [Name,Description,new Date().toDateString()]
       );
       res.status(201).json({ message: 'Item inserted successfully', user: result.rows[0] });
@@ -57,7 +58,7 @@ exports.createItems = async (req, res) => {
   exports.updateItem=async(req,res)=>{
     const { Id,Name,Description } = req.body; 
     try{
-        const result=await dbClient.query('UPDATE "Items" SET "Name" = $2, "Description" = $3, "UpdatedOn"=$4 WHERE "Id" = $1',
+        const result=await dbClient.query('Update "Items" SET "Name" = $2, "Description" = $3, "UpdatedOn"=$4 WHERE "Id" = $1',
             [ Id,Name,Description,new Date().toDateString()]
         );
         if (result.rowCount > 0) {

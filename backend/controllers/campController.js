@@ -6,24 +6,7 @@ exports.getCamps = async (req, res) => {
   const offset = (page - 1) * limit;
 
     try {
-        const result = await dbClient.query(`
-            SELECT 
-                public."Camp_Data"."Id",
-                public."User"."FirstName",
-                public."User"."LastName",
-                public."Camp_Data"."Name",
-                public."Camp_Data"."Description",
-                public."Camp_Data"."LocationAddress",
-                public."Camp_Data"."District"
-            FROM 
-                public."Camp_Data"
-            JOIN 
-                public."User" 
-            ON 
-                public."Camp_Data"."CampAdminId" = public."User"."Id" 
-            WHERE 
-                public."Camp_Data"."IsDeleted"=false 
-            LIMIT $1 OFFSET $2`, [limit, offset] ); 
+      const result = await dbClient.query(`SELECT * FROM get_camps_function($1,$2)`, [limit, offset]); 
                 const totalResult = await dbClient.query('SELECT COUNT(*) FROM public."Camp_Data" WHERE "IsDeleted"=false');
                 const totalItems = parseInt(totalResult.rows[0].count);
                 res.json({
