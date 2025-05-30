@@ -78,13 +78,13 @@ export default function Users() {
             </tr>
           )}
           {users.length > 0 && users.map((user, index) => (
-            <tr key={user.Id}>
+            <tr key={user.id}>
               <td>{index + 1}</td>
-              <td>{`${user.FirstName} ${user.LastName}`}</td>
-              <td>{user.Email}</td>
+              <td>{`${user.firstname} ${user.lastname}`}</td>
+              <td>{user.email}</td>
 
-              <td>{getRoleName(user.RoleId)}</td>
-              <td>{user.Address}</td>
+              <td>{getRoleName(user.roleid)}</td>
+              <td>{user.address}</td>
               <td>
                 {" "}
                 <div className={styles.actionIcons}>

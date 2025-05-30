@@ -82,7 +82,7 @@ export default function Login() {
             </div>
           )}
           <div className={styles.formGroup}>
-            <i className="fas fa-envelope"></i>
+         
             <input
               type="email"
               id="email"
@@ -93,7 +93,7 @@ export default function Login() {
             />
           </div>
           <div className={styles.formGroup}>
-            <i className="fas fa-lock"></i>
+       
             <input
               type="password"
               id="password"
