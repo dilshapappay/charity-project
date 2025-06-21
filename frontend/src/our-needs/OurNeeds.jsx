@@ -107,12 +107,10 @@ export default function OurNeeds() {
                 <div className={styles.logo}>
                     <Link to="/">DONATENOW</Link>
                 </div>
-                <div className={styles.searchBar}>
-                    <i className="fas fa-search"></i>
-                    <input type="text" placeholder="Search" />
-                </div>
+              
                 {localStorage.getItem('token') ? (
                    <div className={styles.profile} onClick={toggleDropdown}>
+                    <div><Link to="/main/dashboard" >Dashboard</Link></div>
                              <img src="../photos/dave.jpg" alt="Profile Picture" />
                              {dropdownOpen && (
                                <div className={styles.dropdownMenu}>
@@ -142,19 +140,19 @@ export default function OurNeeds() {
                 <select value={selectedCategory} onChange={handleCategoryChange}>
                     <option value="">Select Category</option>
                     {categories.map(item => (
-                        <option key={item.Id} value={item.Id}>{item.Name}</option>
+                        <option key={item.id} value={item.id}>{item.name}</option>
                     ))}
                 </select>
                 <button className={styles.button} onClick={handleSearch}>Search</button>
             </div>
-            <div>
+            <div className={styles.section}>
                 {Object.keys(requirements).length === 0 && (
                     <div className='no-data-table'>
                         No Requirements found !!!
                     </div>
                 )}
                 {Object.keys(requirements).length > 0 && Object.keys(requirements).map((district) => (
-                    <div key={district}>
+                    <div  key={district}>
                         <div className={styles.sectionTitle}><h3>{capitalizeFirstLetter(district)}</h3></div>
                         <div className={styles.cardContainer}>
                             {requirements[district].map((requirement) => (

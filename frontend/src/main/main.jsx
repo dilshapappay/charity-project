@@ -22,12 +22,10 @@ function Main() {
       <header className={styles.header}>
         <div className={styles.logo}>
           <Link to="/">DONATENOW</Link></div>
-        <div className={styles.searchBar}>
-          <i className="fas fa-search"></i>
-          <input type="text" placeholder="Search" />
-        </div>
-        <div>  <Link to="/our-needs">Our Needs</Link></div>
+       
+         
         <div className={styles.profile} onClick={toggleDropdown}>
+          <div><Link to="/our-needs" >WishList</Link></div>
           <img src="../photos/dave.jpg" alt="Profile Picture" />
           {dropdownOpen && (
             <div className={styles.dropdownMenu}>

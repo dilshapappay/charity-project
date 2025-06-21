@@ -17,7 +17,7 @@
   align-items: center;
   padding: 10px 20px;
   z-index: 1000; /* Ensures the header stays above all other elements */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .header .logo {
@@ -26,32 +26,26 @@
   background: linear-gradient(90deg, #1f502d, #2d8144, #ff7e5f, #feb47b);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
 }
 
-.header .searchBar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
-.header .searchBar input[type="text"] {
-  padding: 15px  20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  width: 300px;
-  outline: none;
-}
 
 .header .profile img {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   border: 2px solid #2d8144;
 }
 
 .header .profile {
+  display: flex;
+  align-items: center;
   position: relative;
   cursor: pointer;
+  margin-right: 30px;
+  gap: 15px;
 }
 
 .header .dropdownMenu {
@@ -83,7 +77,10 @@
   color: #fff;
 }
 
-
+a{
+text-decoration: none;
+color: #2d8144;
+}
 /* Content wrapper */
 .content {
   display: flex;
@@ -96,7 +93,7 @@
   width: 200px;
   background-color: #ffffff;
   padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   position: fixed;
   top: 80px;
   left: 0;
@@ -134,7 +131,7 @@
 
 .mainContent {
   margin-top: 20px;
-  margin-left: 220px; 
+  margin-left: 230px; 
   flex-grow: 1;
   padding: 20px;
   height: calc(100vh - 60px); 

@@ -148,8 +148,8 @@ export default function AddRequirementForm() {
           <select name="ItemId" value={requirement.ItemId} onChange={handleChange}>
             <option value="">Select Item</option>
             {items.map((item) => (
-              <option key={item.Id} value={item.Id}>
-                {item.Name}
+              <option key={item.id} value={item.id}>
+                {item.name}
               </option>
             ))}
           </select>

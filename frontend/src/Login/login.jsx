@@ -57,7 +57,6 @@ export default function Login() {
         <form onSubmit={handleSubmit}>
           {!isLoginPage && (
             <div className={styles.formGroup}>
-              <i className="fas fa-user"></i>
               <input
                 type="text"
                 id="firstName"
@@ -70,7 +69,6 @@ export default function Login() {
           )}
           {!isLoginPage && (
             <div className={styles.formGroup}>
-              <i className="fas fa-user"></i>
               <input
                 type="text"
                 id="lastName"
@@ -82,8 +80,8 @@ export default function Login() {
             </div>
           )}
           <div className={styles.formGroup}>
-         
             <input
+            
               type="email"
               id="email"
               placeholder="me@example.com"
@@ -110,7 +108,6 @@ export default function Login() {
           </div>
           {!isLoginPage && (
             <div className={styles.formGroup}>
-              <i className="fas fa-lock"></i>
               <input
                 type="password"
                 id="confirmPassword"
